@@ -89,6 +89,8 @@ An interactive time-series chart is **not required**. Clear tables, summary metr
 **Note:** This challenge intentionally simplifies the Mieterstrom business process. It does not represent a complete implementation of regulatory, tax, or energy-market requirements.
 
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 # Use Case 2: Smart Mieterstrom Management Platform deutsche Version
