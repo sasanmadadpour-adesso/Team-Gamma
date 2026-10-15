@@ -22,37 +22,138 @@
   </header>
 
   <main class="page">
-    <section class="page-intro">
-      <div>
-        <h2>Übersicht Ihrer registrierten Einspeiseanlagen</h2>
-        <p>Prüfen Sie Status, Leistung und zugehörige Einspeise-Marktlokationen Ihrer Erneuerbare-Energien-Anlagen.</p>
-      </div>
-      <button id="registerPlantButton" class="primary-action" type="button">
-        Neue Anlage anmelden
-      </button>
+    <section id="overviewView" class="view">
+      <section class="page-intro">
+        <div>
+          <h2>Übersicht Ihrer registrierten Einspeiseanlagen</h2>
+          <p>Prüfen Sie Status, Leistung und zugehörige Einspeise-Marktlokationen Ihrer Erneuerbare-Energien-Anlagen.</p>
+        </div>
+        <button id="registerPlantButton" class="primary-action" type="button">
+          Neue Anlage anmelden
+        </button>
+      </section>
+
+      <section class="summary-strip" aria-label="Kurzübersicht">
+        <article class="summary-card">
+          <span class="summary-label">Anlagen gesamt</span>
+          <strong id="plantCount">0</strong>
+        </article>
+        <article class="summary-card">
+          <span class="summary-label">Gesamtleistung</span>
+          <strong id="totalCapacity">0 kW</strong>
+        </article>
+        <article class="summary-card">
+          <span class="summary-label">Aktive Anlagen</span>
+          <strong id="activePlantCount">0</strong>
+        </article>
+      </section>
+
+      <section id="plantGrid" class="plant-grid" aria-label="Einspeiseanlagen">
+        <!-- Cards are rendered from mock data in app.js -->
+      </section>
     </section>
 
-    <section class="summary-strip" aria-label="Kurzübersicht">
-      <article class="summary-card">
-        <span class="summary-label">Anlagen gesamt</span>
-        <strong id="plantCount">0</strong>
-      </article>
-      <article class="summary-card">
-        <span class="summary-label">Gesamtleistung</span>
-        <strong id="totalCapacity">0 kW</strong>
-      </article>
-      <article class="summary-card">
-        <span class="summary-label">Aktive Anlagen</span>
-        <strong id="activePlantCount">0</strong>
-      </article>
+    <section id="registrationView" class="view" hidden>
+      <section class="page-intro">
+        <div>
+          <h2>Neue Einspeiseanlage anmelden</h2>
+          <p>Erfassen Sie die grundlegenden Angaben zur Erneuerbare-Energien-Anlage. Diese Eingabe wird in diesem Demo-Schritt noch nicht dauerhaft gespeichert.</p>
+        </div>
+      </section>
+
+      <form id="plantRegistrationForm" class="registration-form" novalidate>
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="einspeiseMaLoInput">Einspeise-MaLo <span class="required-mark">*</span></label>
+            <input
+              id="einspeiseMaLoInput"
+              name="einspeiseMaLo"
+              type="text"
+              required
+              autocomplete="off"
+              placeholder="z. B. DE0073325707820000000000000088943"
+              aria-describedby="maLoError"
+            >
+            <p id="maLoError" class="field-error" aria-live="polite"></p>
+          </div>
+
+          <div class="form-field">
+            <label for="eeArtInput">EE-Art <span class="required-mark">*</span></label>
+            <select id="eeArtInput" name="eeArt" required aria-describedby="eeArtError">
+              <option value="">Bitte auswählen</option>
+              <option value="Solar">Solar</option>
+              <option value="Wind">Wind</option>
+            </select>
+            <p id="eeArtError" class="field-error" aria-live="polite"></p>
+          </div>
+
+          <div class="form-field">
+            <label for="leistungInput">Leistung <span class="required-mark">*</span></label>
+            <div class="input-with-unit">
+              <input
+                id="leistungInput"
+                name="leistung"
+                type="number"
+                min="0.1"
+                step="0.1"
+                required
+                placeholder="z. B. 6.0"
+                aria-describedby="leistungError"
+              >
+              <span class="input-unit">kW</span>
+            </div>
+            <p id="leistungError" class="field-error" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button id="cancelRegistrationButton" type="button" class="secondary-action">
+            Abbrechen
+          </button>
+          <button type="submit" class="primary-action">
+            Weiter
+          </button>
+        </div>
+      </form>
     </section>
 
-    <section id="plantGrid" class="plant-grid" aria-label="Einspeiseanlagen">
-      <!-- Cards are rendered from mock data in app.js -->
-    </section>
+    <section id="summaryView" class="view" hidden>
+      <section class="page-intro">
+        <div>
+          <h2>Zusammenfassung der Anlage</h2>
+          <p>Prüfen Sie die erfassten Angaben. In diesem Demo-Schritt wird die Anlage noch nicht dauerhaft übernommen.</p>
+        </div>
+      </section>
 
-    <section id="statusNotice" class="status-notice" hidden>
-      Die Anmeldung weiterer Anlagen wird in der nächsten Ausbaustufe umgesetzt.
+      <section class="summary-panel" aria-label="Zusammenfassung">
+        <dl class="summary-details">
+          <div>
+            <dt>Einspeise-MaLo</dt>
+            <dd id="summaryMaLo"></dd>
+          </div>
+          <div>
+            <dt>EE-Art</dt>
+            <dd id="summaryEeArt"></dd>
+          </div>
+          <div>
+            <dt>Leistung</dt>
+            <dd id="summaryLeistung"></dd>
+          </div>
+        </dl>
+
+        <p class="status-notice">
+          Die Anlage wird in der nächsten Ausbaustufe fachlich geprüft und dauerhaft angelegt.
+        </p>
+
+        <div class="form-actions">
+          <button id="editRegistrationButton" type="button" class="secondary-action">
+            Eingaben korrigieren
+          </button>
+          <button id="finishRegistrationButton" type="button" class="primary-action">
+            Zurück zur Übersicht
+          </button>
+        </div>
+      </section>
     </section>
   </main>
 

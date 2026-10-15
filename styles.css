@@ -245,6 +245,146 @@ h2 {
   font-size: 0.85rem;
 }
 
+.secondary-action {
+  appearance: none;
+  border: 1px solid var(--sap-gray-3);
+  cursor: pointer;
+  min-height: 3rem;
+  padding: 0 1.25rem;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--sap-text);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.secondary-action:hover,
+.secondary-action:focus-visible {
+  background: var(--sap-gray-1);
+  border-color: var(--sap-blue);
+  outline: none;
+}
+
+.registration-form {
+  background: #ffffff;
+  border: 1px solid var(--sap-gray-3);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--sap-shadow);
+}
+
+.form-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-field label {
+  font-weight: 600;
+}
+
+.required-mark {
+  color: #c00000;
+}
+
+.form-field input,
+.form-field select {
+  min-height: 2.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--sap-gray-3);
+  border-radius: 8px;
+  font: inherit;
+  color: var(--sap-text);
+  background: #ffffff;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: 2px solid rgba(0, 112, 242, 0.18);
+  border-color: var(--sap-blue);
+}
+
+.form-field input[aria-invalid="true"],
+.form-field select[aria-invalid="true"] {
+  border-color: #c00000;
+}
+
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.input-with-unit input {
+  flex: 1;
+}
+
+.input-unit {
+  color: var(--sap-muted);
+  font-weight: 600;
+}
+
+.field-error {
+  min-height: 1rem;
+  margin: 0;
+  color: #c00000;
+  font-size: 0.85rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.summary-panel {
+  background: #ffffff;
+  border: 1px solid var(--sap-gray-3);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--sap-shadow);
+}
+
+.summary-details {
+  margin: 0 0 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.summary-details div {
+  display: grid;
+  gap: 0.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--sap-gray-2);
+}
+
+.summary-details div:last-child {
+  border-bottom: none;
+}
+
+.summary-details dt {
+  color: var(--sap-muted);
+  font-size: 0.85rem;
+}
+
+.summary-details dd {
+  margin: 0;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.view[hidden] {
+  display: none;
+}
+
 .status-notice {
   margin-top: 1.5rem;
   padding: 1rem 1.25rem;

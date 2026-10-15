@@ -28,6 +28,22 @@ const plantData = [
   }
 ];
 
+let draftPlant = null;
+
+const views = {
+  overview: document.getElementById("overviewView"),
+  registration: document.getElementById("registrationView"),
+  summary: document.getElementById("summaryView")
+};
+
+const form = document.getElementById("plantRegistrationForm");
+const malooInput = document.getElementById("einspeiseMaLoInput");
+const eeArtInput = document.getElementById("eeArtInput");
+const leistungInput = document.getElementById("leistungInput");
+const malooError = document.getElementById("maLoError");
+const eeArtError = document.getElementById("eeArtError");
+const leistungError = document.getElementById("leistungError");
+
 function formatKw(value) {
   return `${value.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kW`;
 }
@@ -69,32 +85,179 @@ function renderPlantCard(plant) {
   `;
 }
 
-function updateSummary(plants) {
-  const totalCapacity = plants.reduce((sum, plant) => sum + plant.leistungKw, 0);
-  const activePlantCount = plants.filter((plant) => plant.status === "Aktiv").length;
+function updateSummary() {
+  const totalCapacity = plantData.reduce((sum, plant) => sum + plant.leistungKw, 0);
+  const activePlantCount = plantData.filter((plant) => plant.status === "Aktiv").length;
 
-  document.getElementById("plantCount").textContent = plants.length;
+  document.getElementById("plantCount").textContent = plantData.length;
   document.getElementById("totalCapacity").textContent = formatKw(totalCapacity);
   document.getElementById("activePlantCount").textContent = activePlantCount;
 }
 
+function showView(viewName) {
+  Object.entries(views).forEach(([name, element]) => {
+    if (element) {
+      element.hidden = name !== viewName;
+    }
+  });
+
+  if (viewName === "registration" && malooInput) {
+    malooInput.focus();
+  }
+}
+
+function clearErrors() {
+  [malooInput, eeArtInput, leistungInput].forEach((input) => {
+    if (input) {
+      input.setAttribute("aria-invalid", "false");
+    }
+  });
+
+  if (malooError) {
+    malooError.textContent = "";
+  }
+  if (eeArtError) {
+    eeArtError.textContent = "";
+  }
+  if (leistungError) {
+    leistungError.textContent = "";
+  }
+}
+
+function setError(input, errorElement, message) {
+  if (input) {
+    input.setAttribute("aria-invalid", "true");
+  }
+  if (errorElement) {
+    errorElement.textContent = message;
+  }
+}
+
+function validateForm() {
+  clearErrors();
+  let isValid = true;
+
+  const malooValue = malooInput ? malooInput.value.trim() : "";
+  const eeArtValue = eeArtInput ? eeArtInput.value : "";
+  const leistungValue = leistungInput ? leistungInput.value : "";
+  const leistungNumber = Number(leistungValue);
+
+  if (!malooValue) {
+    setError(malooInput, malooError, "Bitte geben Sie eine Einspeise-MaLo ein.");
+    isValid = false;
+  }
+
+  if (!eeArtValue) {
+    setError(eeArtInput, eeArtError, "Bitte wählen Sie eine EE-Art aus.");
+    isValid = false;
+  }
+
+  if (!leistungValue.trim() || Number.isNaN(leistungNumber) || leistungNumber <= 0) {
+    setError(leistungInput, leistungError, "Bitte geben Sie eine Leistung größer als 0 kW ein.");
+    isValid = false;
+  }
+
+  return isValid;
+}
+
+function populateFormFromDraft() {
+  if (!draftPlant || !form) {
+    return;
+  }
+
+  if (malooInput) {
+    malooInput.value = draftPlant.einspeiseMaLo;
+  }
+  if (eeArtInput) {
+    eeArtInput.value = draftPlant.eeArt;
+  }
+  if (leistungInput) {
+    leistungInput.value = String(draftPlant.leistungKw);
+  }
+}
+
+function resetForm() {
+  if (form) {
+    form.reset();
+  }
+  clearErrors();
+  draftPlant = null;
+}
+
+function populateSummary() {
+  const summaryMaloo = document.getElementById("summaryMaLo");
+  const summaryEeArt = document.getElementById("summaryEeArt");
+  const summaryLeistung = document.getElementById("summaryLeistung");
+
+  if (summaryMaloo && draftPlant) {
+    summaryMaloo.textContent = draftPlant.einspeiseMaLo;
+  }
+  if (summaryEeArt && draftPlant) {
+    summaryEeArt.textContent = draftPlant.eeArt;
+  }
+  if (summaryLeistung && draftPlant) {
+    summaryLeistung.textContent = formatKw(draftPlant.leistungKw);
+  }
+}
+
 function mountApp() {
   const plantGrid = document.getElementById("plantGrid");
-  const notice = document.getElementById("statusNotice");
   const registerButton = document.getElementById("registerPlantButton");
+  const cancelButton = document.getElementById("cancelRegistrationButton");
+  const editButton = document.getElementById("editRegistrationButton");
+  const finishButton = document.getElementById("finishRegistrationButton");
 
   if (plantGrid) {
     plantGrid.innerHTML = plantData.map(renderPlantCard).join("");
   }
 
-  updateSummary(plantData);
+  updateSummary();
+  showView("overview");
 
   if (registerButton) {
     registerButton.addEventListener("click", () => {
-      if (notice) {
-        notice.hidden = false;
+      resetForm();
+      showView("registration");
+    });
+  }
+
+  if (cancelButton) {
+    cancelButton.addEventListener("click", () => {
+      resetForm();
+      showView("overview");
+    });
+  }
+
+  if (form) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      if (!validateForm()) {
+        return;
       }
-      // Registration workflow is intentionally not implemented in this MVP step.
+
+      draftPlant = {
+        einspeiseMaLo: malooInput.value.trim(),
+        eeArt: eeArtInput.value,
+        leistungKw: Number(leistungInput.value)
+      };
+
+      populateSummary();
+      showView("summary");
+    });
+  }
+
+  if (editButton) {
+    editButton.addEventListener("click", () => {
+      populateFormFromDraft();
+      showView("registration");
+    });
+  }
+
+  if (finishButton) {
+    finishButton.addEventListener("click", () => {
+      resetForm();
+      showView("overview");
     });
   }
 }
