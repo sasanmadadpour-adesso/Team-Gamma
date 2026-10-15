@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Community-App Einspeisung - Anlagenübersicht für Anlagenbetreiber">
+  <title>Community-App Einspeisung - Meine Einspeiseanlagen</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">CE</div>
+      <div>
+        <p class="eyebrow">Community-App Einspeisung</p>
+        <h1>Meine Einspeiseanlagen</h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="user-chip">Anlagenbetreiber: Max Mustermann</span>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="page-intro">
+      <div>
+        <h2>Übersicht Ihrer registrierten Einspeiseanlagen</h2>
+        <p>Prüfen Sie Status, Leistung und zugehörige Einspeise-Marktlokationen Ihrer Erneuerbare-Energien-Anlagen.</p>
+      </div>
+      <button id="registerPlantButton" class="primary-action" type="button">
+        Neue Anlage anmelden
+      </button>
+    </section>
+
+    <section class="summary-strip" aria-label="Kurzübersicht">
+      <article class="summary-card">
+        <span class="summary-label">Anlagen gesamt</span>
+        <strong id="plantCount">0</strong>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">Gesamtleistung</span>
+        <strong id="totalCapacity">0 kW</strong>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">Aktive Anlagen</span>
+        <strong id="activePlantCount">0</strong>
+      </article>
+    </section>
+
+    <section id="plantGrid" class="plant-grid" aria-label="Einspeiseanlagen">
+      <!-- Cards are rendered from mock data in app.js -->
+    </section>
+
+    <section id="statusNotice" class="status-notice" hidden>
+      Die Anmeldung weiterer Anlagen wird in der nächsten Ausbaustufe umgesetzt.
+    </section>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
