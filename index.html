@@ -121,7 +121,7 @@
       <section class="page-intro">
         <div>
           <h2>Zusammenfassung der Anlage</h2>
-          <p>Prüfen Sie die erfassten Angaben. In diesem Demo-Schritt wird die Anlage noch nicht dauerhaft übernommen.</p>
+          <p>Prüfen Sie die erfassten Angaben. Die fachliche Prüfung der Voraussetzungen kann anschließend gestartet werden.</p>
         </div>
       </section>
 
@@ -141,16 +141,77 @@
           </div>
         </dl>
 
-        <p class="status-notice">
-          Die Anlage wird in der nächsten Ausbaustufe fachlich geprüft und dauerhaft angelegt.
-        </p>
-
         <div class="form-actions">
           <button id="editRegistrationButton" type="button" class="secondary-action">
             Eingaben korrigieren
           </button>
-          <button id="finishRegistrationButton" type="button" class="primary-action">
-            Zurück zur Übersicht
+          <button id="checkRequirementsButton" type="button" class="primary-action">
+            Anlage prüfen
+          </button>
+        </div>
+      </section>
+    </section>
+
+    <section id="checkView" class="view" hidden>
+      <section class="page-intro">
+        <div>
+          <h2>Anlage prüfen</h2>
+          <p>Die Voraussetzungen der Anlage werden geprüft. Diese Prüfung ist im Demo-Schritt lokal simuliert.</p>
+        </div>
+      </section>
+
+      <section class="summary-panel" aria-label="Geprüfte Anlage">
+        <h3 class="check-panel-title">Geprüfte Anlage</h3>
+        <dl class="summary-details">
+          <div>
+            <dt>Einspeise-MaLo</dt>
+            <dd id="checkMaLo"></dd>
+          </div>
+          <div>
+            <dt>EE-Art</dt>
+            <dd id="checkEeArt"></dd>
+          </div>
+          <div>
+            <dt>Leistung</dt>
+            <dd id="checkLeistung"></dd>
+          </div>
+        </dl>
+
+        <div class="check-list" aria-live="polite">
+          <article class="check-item">
+            <div class="check-content">
+              <h4>EE-Anlage</h4>
+              <p>Erneuerbare-Energien-Anlage</p>
+            </div>
+            <span id="checkEeStatus" class="check-status check-status--pending">Wird geprüft…</span>
+          </article>
+
+          <article class="check-item">
+            <div class="check-content">
+              <h4>Gebiet</h4>
+              <p>Anlage liegt im zulässigen Gebiet</p>
+            </div>
+            <span id="checkAreaStatus" class="check-status check-status--pending">Wird geprüft…</span>
+          </article>
+
+          <article class="check-item">
+            <div class="check-content">
+              <h4>iMSys</h4>
+              <p>Intelligentes Messsystem vorhanden</p>
+            </div>
+            <span id="checkMeterStatus" class="check-status check-status--pending">Wird geprüft…</span>
+          </article>
+        </div>
+
+        <p id="checkSuccessMessage" class="status-success" hidden>Voraussetzungen erfüllt</p>
+        <p id="nextStepNotice" class="status-notice" hidden>Nächster Prozessschritt: 4.2 Übernahme bestätigen (folgt in der nächsten Ausbaustufe).</p>
+
+        <div class="form-actions">
+          <button id="backToSummaryButton" type="button" class="secondary-action">
+            Zurück zur Zusammenfassung
+          </button>
+          <button id="continueToTakeoverButton" type="button" class="primary-action" disabled>
+            Weiter zur Übernahmebestätigung
           </button>
         </div>
       </section>

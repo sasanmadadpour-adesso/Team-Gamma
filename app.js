@@ -29,11 +29,13 @@ const plantData = [
 ];
 
 let draftPlant = null;
+let checkTimers = [];
 
 const views = {
   overview: document.getElementById("overviewView"),
   registration: document.getElementById("registrationView"),
-  summary: document.getElementById("summaryView")
+  summary: document.getElementById("summaryView"),
+  check: document.getElementById("checkView")
 };
 
 const form = document.getElementById("plantRegistrationForm");
@@ -43,6 +45,16 @@ const leistungInput = document.getElementById("leistungInput");
 const malooError = document.getElementById("maLoError");
 const eeArtError = document.getElementById("eeArtError");
 const leistungError = document.getElementById("leistungError");
+
+const checkMaLo = document.getElementById("checkMaLo");
+const checkEeArt = document.getElementById("checkEeArt");
+const checkLeistung = document.getElementById("checkLeistung");
+const checkEeStatus = document.getElementById("checkEeStatus");
+const checkAreaStatus = document.getElementById("checkAreaStatus");
+const checkMeterStatus = document.getElementById("checkMeterStatus");
+const checkSuccessMessage = document.getElementById("checkSuccessMessage");
+const nextStepNotice = document.getElementById("nextStepNotice");
+const continueToTakeoverButton = document.getElementById("continueToTakeoverButton");
 
 function formatKw(value) {
   return `${value.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kW`;
@@ -94,7 +106,13 @@ function updateSummary() {
   document.getElementById("activePlantCount").textContent = activePlantCount;
 }
 
+function clearCheckTimers() {
+  checkTimers.forEach((timer) => window.clearTimeout(timer));
+  checkTimers = [];
+}
+
 function showView(viewName) {
+  clearCheckTimers();
   Object.entries(views).forEach(([name, element]) => {
     if (element) {
       element.hidden = name !== viewName;
@@ -200,12 +218,95 @@ function populateSummary() {
   }
 }
 
+function resetCheckDisplay() {
+  if (checkEeStatus) {
+    checkEeStatus.textContent = "Wird geprüft…";
+    checkEeStatus.className = "check-status check-status--pending";
+  }
+  if (checkAreaStatus) {
+    checkAreaStatus.textContent = "Wird geprüft…";
+    checkAreaStatus.className = "check-status check-status--pending";
+  }
+  if (checkMeterStatus) {
+    checkMeterStatus.textContent = "Wird geprüft…";
+    checkMeterStatus.className = "check-status check-status--pending";
+  }
+  if (checkSuccessMessage) {
+    checkSuccessMessage.hidden = true;
+  }
+  if (nextStepNotice) {
+    nextStepNotice.hidden = true;
+  }
+  if (continueToTakeoverButton) {
+    continueToTakeoverButton.disabled = true;
+  }
+}
+
+function populateCheckFromDraft() {
+  if (!draftPlant) {
+    return;
+  }
+
+  if (checkMaLo) {
+    checkMaLo.textContent = draftPlant.einspeiseMaLo;
+  }
+  if (checkEeArt) {
+    checkEeArt.textContent = draftPlant.eeArt;
+  }
+  if (checkLeistung) {
+    checkLeistung.textContent = formatKw(draftPlant.leistungKw);
+  }
+}
+
+function startChecks() {
+  resetCheckDisplay();
+
+  checkTimers.push(
+    window.setTimeout(() => {
+      if (checkEeStatus) {
+        checkEeStatus.textContent = "erfüllt";
+        checkEeStatus.className = "check-status check-status--success";
+      }
+    }, 650)
+  );
+
+  checkTimers.push(
+    window.setTimeout(() => {
+      if (checkAreaStatus) {
+        checkAreaStatus.textContent = "erfüllt";
+        checkAreaStatus.className = "check-status check-status--success";
+      }
+    }, 1300)
+  );
+
+  checkTimers.push(
+    window.setTimeout(() => {
+      if (checkMeterStatus) {
+        checkMeterStatus.textContent = "vorhanden";
+        checkMeterStatus.className = "check-status check-status--success";
+      }
+    }, 1950)
+  );
+
+  checkTimers.push(
+    window.setTimeout(() => {
+      if (checkSuccessMessage) {
+        checkSuccessMessage.hidden = false;
+      }
+      if (continueToTakeoverButton) {
+        continueToTakeoverButton.disabled = false;
+      }
+    }, 2450)
+  );
+}
+
 function mountApp() {
   const plantGrid = document.getElementById("plantGrid");
   const registerButton = document.getElementById("registerPlantButton");
   const cancelButton = document.getElementById("cancelRegistrationButton");
+  const checkButton = document.getElementById("checkRequirementsButton");
   const editButton = document.getElementById("editRegistrationButton");
-  const finishButton = document.getElementById("finishRegistrationButton");
+  const backToSummaryButton = document.getElementById("backToSummaryButton");
 
   if (plantGrid) {
     plantGrid.innerHTML = plantData.map(renderPlantCard).join("");
@@ -254,10 +355,25 @@ function mountApp() {
     });
   }
 
-  if (finishButton) {
-    finishButton.addEventListener("click", () => {
-      resetForm();
-      showView("overview");
+  if (checkButton) {
+    checkButton.addEventListener("click", () => {
+      populateCheckFromDraft();
+      showView("check");
+      startChecks();
+    });
+  }
+
+  if (backToSummaryButton) {
+    backToSummaryButton.addEventListener("click", () => {
+      showView("summary");
+    });
+  }
+
+  if (continueToTakeoverButton) {
+    continueToTakeoverButton.addEventListener("click", () => {
+      if (nextStepNotice) {
+        nextStepNotice.hidden = false;
+      }
     });
   }
 }

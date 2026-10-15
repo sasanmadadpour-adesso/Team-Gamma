@@ -385,6 +385,77 @@ h2 {
   display: none;
 }
 
+.check-panel-title {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+}
+
+.check-list {
+  display: grid;
+  gap: 0.85rem;
+  margin: 1.5rem 0;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  background: var(--sap-gray-1);
+  border: 1px solid var(--sap-gray-2);
+  border-radius: 10px;
+}
+
+.check-content h4 {
+  margin: 0 0 0.2rem;
+  font-size: 1rem;
+}
+
+.check-content p {
+  margin: 0;
+  color: var(--sap-muted);
+  font-size: 0.9rem;
+}
+
+.check-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 9.5rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.check-status--pending {
+  background: #fff4e5;
+  color: var(--sap-warning);
+}
+
+.check-status--success {
+  background: #e7f5ec;
+  color: var(--sap-success);
+}
+
+.status-success {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: #e7f5ec;
+  border: 1px solid #b9e3c4;
+  border-radius: 10px;
+  color: var(--sap-success);
+  font-weight: 700;
+}
+
+.form-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .status-notice {
   margin-top: 1.5rem;
   padding: 1rem 1.25rem;
