@@ -204,14 +204,70 @@
         </div>
 
         <p id="checkSuccessMessage" class="status-success" hidden>Voraussetzungen erfüllt</p>
-        <p id="nextStepNotice" class="status-notice" hidden>Nächster Prozessschritt: 4.2 Übernahme bestätigen (folgt in der nächsten Ausbaustufe).</p>
+        <p id="checkNextNotice" class="status-notice" hidden>Nächster Prozessschritt: 4.2 Übernahme bestätigen (folgt in der nächsten Ausbaustufe).</p>
 
         <div class="form-actions">
-          <button id="backToSummaryButton" type="button" class="secondary-action">
+          <button id="backToSummaryFromCheckButton" type="button" class="secondary-action">
             Zurück zur Zusammenfassung
           </button>
           <button id="continueToTakeoverButton" type="button" class="primary-action" disabled>
             Weiter zur Übernahmebestätigung
+          </button>
+        </div>
+      </section>
+    </section>
+
+    <section id="takeoverView" class="view" hidden>
+      <section class="page-intro">
+        <div>
+          <h2>Übernahme bestätigen</h2>
+          <p>Dieser Schritt gehört zum Prozess des Dienstleisters / Lieferanten. Die Oberfläche zeigt den Prozessstatus der Einspeisung in den Bilanzkreis.</p>
+        </div>
+      </section>
+
+      <section class="summary-panel" aria-label="Übernahmeprüfung">
+        <div class="role-banner">
+          Prozesseigentümer: Dienstleister / Lieferant
+        </div>
+
+        <h3 class="check-panel-title">Übernahme der Einspeisung in den Bilanzkreis bestätigen</h3>
+
+        <dl class="summary-details">
+          <div>
+            <dt>Einspeise-MaLo</dt>
+            <dd id="takeoverMaLo"></dd>
+          </div>
+          <div>
+            <dt>EE-Art</dt>
+            <dd id="takeoverEeArt"></dd>
+          </div>
+          <div>
+            <dt>Leistung</dt>
+            <dd id="takeoverLeistung"></dd>
+          </div>
+        </dl>
+
+        <p id="takeoverStatusMessage" class="status-notice">
+          Bereit zur Simulation der Übernahme.
+        </p>
+
+        <p id="takeoverSuccessExplanation" class="status-success" hidden>
+          Übernahme bestätigt. Die Zuordnung der Einspeise-MaLo wird anschließend über die Marktkommunikation an den VNB gesendet und dort geprüft.
+        </p>
+
+        <p id="takeoverNextNotice" class="status-notice" hidden>
+          Nächster Prozessschritt: 4.3 VNB-Prüfung (folgt in der nächsten Ausbaustufe).
+        </p>
+
+        <div class="form-actions">
+          <button id="backToCheckButton" type="button" class="secondary-action">
+            Zurück zur Anlageprüfung
+          </button>
+          <button id="simulateTakeoverButton" type="button" class="primary-action">
+            Übernahme simulieren
+          </button>
+          <button id="continueToVnbButton" type="button" class="primary-action" disabled>
+            Weiter zur VNB-Prüfung
           </button>
         </div>
       </section>

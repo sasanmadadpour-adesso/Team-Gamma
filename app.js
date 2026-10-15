@@ -29,13 +29,16 @@ const plantData = [
 ];
 
 let draftPlant = null;
+let takeoverConfirmed = false;
 let checkTimers = [];
+let takeoverTimers = [];
 
 const views = {
   overview: document.getElementById("overviewView"),
   registration: document.getElementById("registrationView"),
   summary: document.getElementById("summaryView"),
-  check: document.getElementById("checkView")
+  check: document.getElementById("checkView"),
+  takeover: document.getElementById("takeoverView")
 };
 
 const form = document.getElementById("plantRegistrationForm");
@@ -53,8 +56,15 @@ const checkEeStatus = document.getElementById("checkEeStatus");
 const checkAreaStatus = document.getElementById("checkAreaStatus");
 const checkMeterStatus = document.getElementById("checkMeterStatus");
 const checkSuccessMessage = document.getElementById("checkSuccessMessage");
-const nextStepNotice = document.getElementById("nextStepNotice");
-const continueToTakeoverButton = document.getElementById("continueToTakeoverButton");
+
+const takeoverMaLo = document.getElementById("takeoverMaLo");
+const takeoverEeArt = document.getElementById("takeoverEeArt");
+const takeoverLeistung = document.getElementById("takeoverLeistung");
+const takeoverStatusMessage = document.getElementById("takeoverStatusMessage");
+const takeoverSuccessExplanation = document.getElementById("takeoverSuccessExplanation");
+const takeoverNextNotice = document.getElementById("takeoverNextNotice");
+const simulateTakeoverButton = document.getElementById("simulateTakeoverButton");
+const continueToVnbButton = document.getElementById("continueToVnbButton");
 
 function formatKw(value) {
   return `${value.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kW`;
@@ -111,8 +121,14 @@ function clearCheckTimers() {
   checkTimers = [];
 }
 
+function clearTakeoverTimers() {
+  takeoverTimers.forEach((timer) => window.clearTimeout(timer));
+  takeoverTimers = [];
+}
+
 function showView(viewName) {
   clearCheckTimers();
+  clearTakeoverTimers();
   Object.entries(views).forEach(([name, element]) => {
     if (element) {
       element.hidden = name !== viewName;
@@ -200,6 +216,7 @@ function resetForm() {
   }
   clearErrors();
   draftPlant = null;
+  takeoverConfirmed = false;
 }
 
 function populateSummary() {
@@ -233,9 +250,6 @@ function resetCheckDisplay() {
   }
   if (checkSuccessMessage) {
     checkSuccessMessage.hidden = true;
-  }
-  if (nextStepNotice) {
-    nextStepNotice.hidden = true;
   }
   if (continueToTakeoverButton) {
     continueToTakeoverButton.disabled = true;
@@ -300,13 +314,92 @@ function startChecks() {
   );
 }
 
+function populateTakeoverFromDraft() {
+  if (!draftPlant) {
+    return;
+  }
+
+  if (takeoverMaLo) {
+    takeoverMaLo.textContent = draftPlant.einspeiseMaLo;
+  }
+  if (takeoverEeArt) {
+    takeoverEeArt.textContent = draftPlant.eeArt;
+  }
+  if (takeoverLeistung) {
+    takeoverLeistung.textContent = formatKw(draftPlant.leistungKw);
+  }
+}
+
+function resetTakeoverDisplay() {
+  if (takeoverStatusMessage) {
+    takeoverStatusMessage.textContent = "Bereit zur Simulation der Übernahme.";
+    takeoverStatusMessage.className = "status-notice";
+  }
+  if (takeoverSuccessExplanation) {
+    takeoverSuccessExplanation.hidden = true;
+  }
+  if (takeoverNextNotice) {
+    takeoverNextNotice.hidden = true;
+  }
+  if (simulateTakeoverButton) {
+    simulateTakeoverButton.disabled = false;
+  }
+  if (continueToVnbButton) {
+    continueToVnbButton.disabled = true;
+  }
+}
+
+function setTakeoverConfirmedState() {
+  if (takeoverStatusMessage) {
+    takeoverStatusMessage.textContent = "Übernahme bestätigt";
+    takeoverStatusMessage.className = "status-success";
+  }
+  if (takeoverSuccessExplanation) {
+    takeoverSuccessExplanation.hidden = false;
+  }
+  if (simulateTakeoverButton) {
+    simulateTakeoverButton.disabled = true;
+  }
+  if (continueToVnbButton) {
+    continueToVnbButton.disabled = false;
+  }
+}
+
+function startTakeoverSimulation() {
+  if (takeoverConfirmed) {
+    setTakeoverConfirmedState();
+    return;
+  }
+
+  if (simulateTakeoverButton) {
+    simulateTakeoverButton.disabled = true;
+  }
+  if (takeoverStatusMessage) {
+    takeoverStatusMessage.textContent = "Übernahme wird bestätigt…";
+    takeoverStatusMessage.className = "status-notice";
+  }
+
+  takeoverTimers.push(
+    window.setTimeout(() => {
+      takeoverConfirmed = true;
+      setTakeoverConfirmedState();
+      if (takeoverNextNotice) {
+        takeoverNextNotice.hidden = true;
+      }
+    }, 1100)
+  );
+}
+
 function mountApp() {
   const plantGrid = document.getElementById("plantGrid");
   const registerButton = document.getElementById("registerPlantButton");
   const cancelButton = document.getElementById("cancelRegistrationButton");
-  const checkButton = document.getElementById("checkRequirementsButton");
+  const checkRequirementsButton = document.getElementById("checkRequirementsButton");
   const editButton = document.getElementById("editRegistrationButton");
-  const backToSummaryButton = document.getElementById("backToSummaryButton");
+  const backToSummaryFromCheckButton = document.getElementById("backToSummaryFromCheckButton");
+  const continueToTakeoverButton = document.getElementById("continueToTakeoverButton");
+  const backToCheckButton = document.getElementById("backToCheckButton");
+  const continueToVnbButtonRef = continueToVnbButton;
 
   if (plantGrid) {
     plantGrid.innerHTML = plantData.map(renderPlantCard).join("");
@@ -355,24 +448,46 @@ function mountApp() {
     });
   }
 
-  if (checkButton) {
-    checkButton.addEventListener("click", () => {
+  if (checkRequirementsButton) {
+    checkRequirementsButton.addEventListener("click", () => {
       populateCheckFromDraft();
       showView("check");
       startChecks();
     });
   }
 
-  if (backToSummaryButton) {
-    backToSummaryButton.addEventListener("click", () => {
+  if (backToSummaryFromCheckButton) {
+    backToSummaryFromCheckButton.addEventListener("click", () => {
       showView("summary");
     });
   }
 
   if (continueToTakeoverButton) {
     continueToTakeoverButton.addEventListener("click", () => {
-      if (nextStepNotice) {
-        nextStepNotice.hidden = false;
+      populateTakeoverFromDraft();
+      if (takeoverConfirmed) {
+        resetTakeoverDisplay();
+      } else {
+        resetTakeoverDisplay();
+      }
+      showView("takeover");
+    });
+  }
+
+  if (backToCheckButton) {
+    backToCheckButton.addEventListener("click", () => {
+      showView("check");
+    });
+  }
+
+  if (simulateTakeoverButton) {
+    simulateTakeoverButton.addEventListener("click", startTakeoverSimulation);
+  }
+
+  if (continueToVnbButtonRef) {
+    continueToVnbButtonRef.addEventListener("click", () => {
+      if (takeoverNextNotice) {
+        takeoverNextNotice.hidden = false;
       }
     });
   }

@@ -450,6 +450,22 @@ h2 {
   font-weight: 700;
 }
 
+.role-banner {
+  display: inline-flex;
+  margin-bottom: 1rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: #edf2f8;
+  color: var(--sap-blue-dark);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.process-status--pending {
+  background: #fff4e5;
+  color: var(--sap-warning);
+}
+
 .form-actions button:disabled {
   opacity: 0.55;
   cursor: not-allowed;
