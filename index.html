@@ -204,7 +204,9 @@
         </div>
 
         <p id="checkSuccessMessage" class="status-success" hidden>Voraussetzungen erfüllt</p>
-        <p id="checkNextNotice" class="status-notice" hidden>Nächster Prozessschritt: 4.2 Übernahme bestätigen (folgt in der nächsten Ausbaustufe).</p>
+        <p id="checkInfoMessage" class="status-notice" hidden>
+          Die Voraussetzungen der Anlage wurden erfüllt. Die weitere Marktkommunikation wird extern verarbeitet.
+        </p>
 
         <div class="form-actions">
           <button id="backToSummaryFromCheckButton" type="button" class="secondary-action">
@@ -252,12 +254,23 @@
         </p>
 
         <p id="takeoverSuccessExplanation" class="status-success" hidden>
-          Übernahme bestätigt. Die Zuordnung der Einspeise-MaLo wird anschließend über die Marktkommunikation an den VNB gesendet und dort geprüft.
+          Übernahme bestätigt. Die Zuordnung der Einspeise-MaLo wird über die Marktkommunikation verarbeitet; dieser Schritt erfolgt extern.
         </p>
 
-        <p id="takeoverNextNotice" class="status-notice" hidden>
-          Nächster Prozessschritt: 4.3 VNB-Prüfung (folgt in der nächsten Ausbaustufe).
-        </p>
+        <section id="takeoverDemoSection" class="demo-response-panel" hidden>
+          <h3 class="check-panel-title">Temporäre Demo-Eingabe externer Antwort</h3>
+          <p class="demo-note">
+            Diese Aktionen simulieren nur den Eingang einer externen Antwort (z. B. Marktkommunikation/VNB-Ergebnis). Sie simulieren keine S/4-, VNB- oder UTILMD-Prozesse.
+          </p>
+          <div class="form-actions">
+            <button id="externalConfirmationButton" type="button" class="primary-action">
+              Externe Bestätigung empfangen
+            </button>
+            <button id="externalRejectionButton" type="button" class="secondary-action">
+              Externe Ablehnung empfangen
+            </button>
+          </div>
+        </section>
 
         <div class="form-actions">
           <button id="backToCheckButton" type="button" class="secondary-action">
@@ -266,8 +279,56 @@
           <button id="simulateTakeoverButton" type="button" class="primary-action">
             Übernahme simulieren
           </button>
-          <button id="continueToVnbButton" type="button" class="primary-action" disabled>
-            Weiter zur VNB-Prüfung
+        </div>
+      </section>
+    </section>
+
+    <section id="resultView" class="view" hidden>
+      <section class="page-intro">
+        <div>
+          <h2>Antwort verarbeiten und Ergebnis</h2>
+          <p>Die eingehende externe Antwort wird in der UI verarbeitet und dem Anlagenbetreiber angezeigt.</p>
+        </div>
+      </section>
+
+      <section class="summary-panel" aria-label="Ergebnis der Anlage">
+        <div class="role-banner">
+          Anlagenbetreiber-Ansicht
+        </div>
+
+        <section class="processing-section" aria-label="Antwortverarbeitung">
+          <h3 class="check-panel-title">4.3 Antwort verarbeiten</h3>
+          <p id="externalResponseReceivedText">Externe Antwort empfangen: Nein</p>
+          <p id="externalResponseStatusText">Antwortstatus: Offen</p>
+          <p id="plantReleaseText">Freigabe der Anlage: Noch nicht erfolgt</p>
+          <p id="plantStatusText">Anlagenstatus: In Bearbeitung</p>
+        </section>
+
+        <section class="result-section" aria-label="Info an Betreiber">
+          <h3 id="resultHeading" class="result-heading">Anlage ist angemeldet</h3>
+          <p id="resultStatus" class="status-badge status-badge--registered">Bereit zur Zuordnung</p>
+          <dl class="summary-details">
+            <div>
+              <dt>Einspeise-MaLo</dt>
+              <dd id="resultMaLo"></dd>
+            </div>
+            <div>
+              <dt>EE-Art</dt>
+              <dd id="resultEeArt"></dd>
+            </div>
+            <div>
+              <dt>Leistung</dt>
+              <dd id="resultLeistung"></dd>
+            </div>
+          </dl>
+          <p id="resultExplanation" class="status-success">
+            Die Anlage ist angemeldet und kann später der Community zugeordnet werden.
+          </p>
+        </section>
+
+        <div class="form-actions">
+          <button id="returnToOverviewButton" type="button" class="primary-action">
+            Zur Anlagenübersicht
           </button>
         </div>
       </section>

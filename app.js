@@ -29,6 +29,7 @@ const plantData = [
 ];
 
 let draftPlant = null;
+let externalResult = null;
 let takeoverConfirmed = false;
 let checkTimers = [];
 let takeoverTimers = [];
@@ -38,7 +39,8 @@ const views = {
   registration: document.getElementById("registrationView"),
   summary: document.getElementById("summaryView"),
   check: document.getElementById("checkView"),
-  takeover: document.getElementById("takeoverView")
+  takeover: document.getElementById("takeoverView"),
+  result: document.getElementById("resultView")
 };
 
 const form = document.getElementById("plantRegistrationForm");
@@ -56,15 +58,28 @@ const checkEeStatus = document.getElementById("checkEeStatus");
 const checkAreaStatus = document.getElementById("checkAreaStatus");
 const checkMeterStatus = document.getElementById("checkMeterStatus");
 const checkSuccessMessage = document.getElementById("checkSuccessMessage");
+const checkInfoMessage = document.getElementById("checkInfoMessage");
 
 const takeoverMaLo = document.getElementById("takeoverMaLo");
 const takeoverEeArt = document.getElementById("takeoverEeArt");
 const takeoverLeistung = document.getElementById("takeoverLeistung");
 const takeoverStatusMessage = document.getElementById("takeoverStatusMessage");
 const takeoverSuccessExplanation = document.getElementById("takeoverSuccessExplanation");
-const takeoverNextNotice = document.getElementById("takeoverNextNotice");
+const takeoverDemoSection = document.getElementById("takeoverDemoSection");
 const simulateTakeoverButton = document.getElementById("simulateTakeoverButton");
-const continueToVnbButton = document.getElementById("continueToVnbButton");
+
+const externalProcessing = {
+  received: document.getElementById("externalResponseReceivedText"),
+  status: document.getElementById("externalResponseStatusText"),
+  release: document.getElementById("plantReleaseText"),
+  plantStatus: document.getElementById("plantStatusText"),
+  heading: document.getElementById("resultHeading"),
+  badge: document.getElementById("resultStatus"),
+  maloo: document.getElementById("resultMaLo"),
+  eeArt: document.getElementById("resultEeArt"),
+  leistung: document.getElementById("resultLeistung"),
+  explanation: document.getElementById("resultExplanation")
+};
 
 function formatKw(value) {
   return `${value.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kW`;
@@ -216,6 +231,7 @@ function resetForm() {
   }
   clearErrors();
   draftPlant = null;
+  externalResult = null;
   takeoverConfirmed = false;
 }
 
@@ -250,6 +266,9 @@ function resetCheckDisplay() {
   }
   if (checkSuccessMessage) {
     checkSuccessMessage.hidden = true;
+  }
+  if (checkInfoMessage) {
+    checkInfoMessage.hidden = true;
   }
   if (continueToTakeoverButton) {
     continueToTakeoverButton.disabled = true;
@@ -307,6 +326,9 @@ function startChecks() {
       if (checkSuccessMessage) {
         checkSuccessMessage.hidden = false;
       }
+      if (checkInfoMessage) {
+        checkInfoMessage.hidden = false;
+      }
       if (continueToTakeoverButton) {
         continueToTakeoverButton.disabled = false;
       }
@@ -338,14 +360,11 @@ function resetTakeoverDisplay() {
   if (takeoverSuccessExplanation) {
     takeoverSuccessExplanation.hidden = true;
   }
-  if (takeoverNextNotice) {
-    takeoverNextNotice.hidden = true;
+  if (takeoverDemoSection) {
+    takeoverDemoSection.hidden = true;
   }
   if (simulateTakeoverButton) {
     simulateTakeoverButton.disabled = false;
-  }
-  if (continueToVnbButton) {
-    continueToVnbButton.disabled = true;
   }
 }
 
@@ -357,11 +376,11 @@ function setTakeoverConfirmedState() {
   if (takeoverSuccessExplanation) {
     takeoverSuccessExplanation.hidden = false;
   }
+  if (takeoverDemoSection) {
+    takeoverDemoSection.hidden = false;
+  }
   if (simulateTakeoverButton) {
     simulateTakeoverButton.disabled = true;
-  }
-  if (continueToVnbButton) {
-    continueToVnbButton.disabled = false;
   }
 }
 
@@ -383,11 +402,94 @@ function startTakeoverSimulation() {
     window.setTimeout(() => {
       takeoverConfirmed = true;
       setTakeoverConfirmedState();
-      if (takeoverNextNotice) {
-        takeoverNextNotice.hidden = true;
-      }
     }, 1100)
   );
+}
+
+function populateResultView(isConfirmed) {
+  const plantStatus = isConfirmed ? "Bereit zur Zuordnung" : "Abgelehnt";
+  const releaseText = isConfirmed ? "Freigabe der Anlage: erfolgt" : "Freigabe der Anlage: nicht erfolgt";
+  const statusText = isConfirmed ? "bestätigt" : "abgelehnt";
+  externalResult = {
+    received: true,
+    status: statusText,
+    released: isConfirmed,
+    plantStatus
+  };
+
+  if (externalProcessing.received) {
+    externalProcessing.received.textContent = "Externe Antwort empfangen: Ja";
+  }
+  if (externalProcessing.status) {
+    externalProcessing.status.textContent = `Antwortstatus: ${statusText}`;
+  }
+  if (externalProcessing.release) {
+    externalProcessing.release.textContent = releaseText;
+  }
+  if (externalProcessing.plantStatus) {
+    externalProcessing.plantStatus.textContent = `Anlagenstatus: ${plantStatus}`;
+  }
+
+  if (externalProcessing.maloo && draftPlant) {
+    externalProcessing.maloo.textContent = draftPlant.einspeiseMaLo;
+  }
+  if (externalProcessing.eeArt && draftPlant) {
+    externalProcessing.eeArt.textContent = draftPlant.eeArt;
+  }
+  if (externalProcessing.leistung && draftPlant) {
+    externalProcessing.leistung.textContent = formatKw(draftPlant.leistungKw);
+  }
+
+  if (externalProcessing.heading) {
+    externalProcessing.heading.textContent = isConfirmed
+      ? "Anlage ist angemeldet"
+      : "Anmeldung abgelehnt";
+  }
+
+  if (externalProcessing.badge) {
+    externalProcessing.badge.textContent = plantStatus;
+    externalProcessing.badge.className = isConfirmed
+      ? "status-badge status-badge--registered"
+      : "status-badge status-badge--rejected";
+  }
+
+  if (externalProcessing.explanation) {
+    externalProcessing.explanation.textContent = isConfirmed
+      ? "Die Anlage ist angemeldet und kann später der Community zugeordnet werden."
+      : "Die Anlage ist nicht für die Community-Zuordnung verfügbar.";
+    externalProcessing.explanation.className = isConfirmed ? "status-success" : "status-notice";
+  }
+}
+
+function processExternalResult(isConfirmed) {
+  if (!draftPlant) {
+    return;
+  }
+  populateResultView(isConfirmed);
+  showView("result");
+}
+
+function addSuccessfulPlantToOverview() {
+  if (!draftPlant || !externalResult || externalResult.plantStatus !== "Bereit zur Zuordnung") {
+    return;
+  }
+
+  const existingPlant = plantData.find((plant) => plant.einspeiseMaLo === draftPlant.einspeiseMaLo);
+  const newPlant = {
+    name: `${draftPlant.eeArt}-Anlage (Demo)`,
+    einspeiseMaLo: draftPlant.einspeiseMaLo,
+    eeArt: draftPlant.eeArt,
+    leistungKw: draftPlant.leistungKw,
+    status: "Bereit zur Zuordnung",
+    statusClass: "registered",
+    standort: "Demo-Datensatz"
+  };
+
+  if (existingPlant) {
+    Object.assign(existingPlant, newPlant);
+  } else {
+    plantData.push(newPlant);
+  }
 }
 
 function mountApp() {
@@ -399,7 +501,9 @@ function mountApp() {
   const backToSummaryFromCheckButton = document.getElementById("backToSummaryFromCheckButton");
   const continueToTakeoverButton = document.getElementById("continueToTakeoverButton");
   const backToCheckButton = document.getElementById("backToCheckButton");
-  const continueToVnbButtonRef = continueToVnbButton;
+  const externalConfirmationButton = document.getElementById("externalConfirmationButton");
+  const externalRejectionButton = document.getElementById("externalRejectionButton");
+  const returnToOverviewButton = document.getElementById("returnToOverviewButton");
 
   if (plantGrid) {
     plantGrid.innerHTML = plantData.map(renderPlantCard).join("");
@@ -466,7 +570,7 @@ function mountApp() {
     continueToTakeoverButton.addEventListener("click", () => {
       populateTakeoverFromDraft();
       if (takeoverConfirmed) {
-        resetTakeoverDisplay();
+        setTakeoverConfirmedState();
       } else {
         resetTakeoverDisplay();
       }
@@ -484,11 +588,27 @@ function mountApp() {
     simulateTakeoverButton.addEventListener("click", startTakeoverSimulation);
   }
 
-  if (continueToVnbButtonRef) {
-    continueToVnbButtonRef.addEventListener("click", () => {
-      if (takeoverNextNotice) {
-        takeoverNextNotice.hidden = false;
+  if (externalConfirmationButton) {
+    externalConfirmationButton.addEventListener("click", () => {
+      processExternalResult(true);
+    });
+  }
+
+  if (externalRejectionButton) {
+    externalRejectionButton.addEventListener("click", () => {
+      processExternalResult(false);
+    });
+  }
+
+  if (returnToOverviewButton) {
+    returnToOverviewButton.addEventListener("click", () => {
+      addSuccessfulPlantToOverview();
+      resetForm();
+      if (plantGrid) {
+        plantGrid.innerHTML = plantData.map(renderPlantCard).join("");
       }
+      updateSummary();
+      showView("overview");
     });
   }
 }

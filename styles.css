@@ -219,6 +219,44 @@ h2 {
   color: var(--sap-blue-dark);
 }
 
+.status-badge--rejected {
+  background: #fde7e9;
+  color: #b42318;
+}
+
+.demo-response-panel {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px dashed #b7c0ce;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.demo-note {
+  margin: 0 0 1rem;
+  color: var(--sap-muted);
+  font-size: 0.9rem;
+}
+
+.processing-section,
+.result-section {
+  padding: 1rem 0;
+}
+
+.processing-section p,
+.result-section p {
+  margin: 0.35rem 0;
+}
+
+.result-heading {
+  margin: 0 0 0.75rem;
+  font-size: 1.2rem;
+}
+
+.result-section .status-badge {
+  margin-bottom: 1rem;
+}
+
 .plant-details {
   display: grid;
   grid-template-columns: 1fr 1fr;
