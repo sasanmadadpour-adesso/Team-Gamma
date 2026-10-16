@@ -10,6 +10,24 @@ sap.ui.define(
         var DEMO_COMMUNITY_ID = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
         var DEMO_PLANT_ID = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb";
 
+        var PLANT_STATUS_LABELS = {
+            REGISTERED: "Registriert",
+            IN_REVIEW: "In Prüfung",
+            ACTIVE: "Aktiv",
+            READY_FOR_ASSIGNMENT: "Bereit zur Zuordnung",
+            ASSIGNED: "Zugeordnet",
+            REJECTED: "Abgelehnt"
+        };
+
+        var PLANT_STATUS_STATES = {
+            REGISTERED: "None",
+            IN_REVIEW: "Warning",
+            ACTIVE: "Success",
+            READY_FOR_ASSIGNMENT: "Information",
+            ASSIGNED: "Success",
+            REJECTED: "Error"
+        };
+
         function round(value, digits) {
             return Number(Number(value || 0).toFixed(digits || 2));
         }
@@ -17,10 +35,33 @@ sap.ui.define(
         return Controller.extend("neo.energy.energysharingportal.controller.Main", {
             onInit: function () {
                 var oView = this.getView();
-                var oPortal = new JSONModel({ view: "dashboard", communityTab: "overview" });
+                var oPortal = new JSONModel({
+                    view: "dashboard",
+                    communityTab: "overview",
+                    email: "",
+                    password: "",
+                    loginError: false
+                });
                 oView.setModel(oPortal, "portal");
                 oView.setModel(new JSONModel({ items: [], plant: {}, checkpoints: [] }), "plantView");
-                oView.setModel(new JSONModel({ items: [], plant: {}, checkpoints: [] }), "plantView");
+                oView.setModel(new JSONModel({ items: [] }), "communityParticipants");
+                oView.setModel(new JSONModel({ items: [] }), "allParticipants");
+                oView.setModel(new JSONModel({ items: [] }), "billing");
+                oView.setModel(new JSONModel({
+                    name: "Jan Koller",
+                    community: {},
+                    plant: {},
+                    billing: []
+                }), "customer");
+                oView.setModel(new JSONModel({
+                    items: [],
+                    selected: null,
+                    checkpoints: [],
+                    total: 0,
+                    readyForAssignment: 0,
+                    assigned: 0,
+                    inReview: 0
+                }), "allPlants");
 
                 var oDashboard = oView.getModel("dashboard");
                 if (!oDashboard) {
@@ -195,9 +236,136 @@ sap.ui.define(
                     $filter: "community_ID eq '" + DEMO_COMMUNITY_ID + "'"
                 });
                 oParticipantsBinding.requestContexts(0, 1000).then(function (aContexts) {
-                    oCommunityModel.setProperty("/participantsCount", (aContexts || []).length);
+                    var aParticipants = (aContexts || []).map(function (oContext) {
+                        return oContext.getObject();
+                    });
+                    oCommunityModel.setProperty("/participantsCount", aParticipants.length);
+                    oView.getModel("communityParticipants").setProperty("/items", aParticipants);
                 }).catch(function () {
                     oCommunityModel.setProperty("/participantsCount", 1);
+                });
+
+                this._loadBillingData();
+            },
+
+            _loadAllPlants: function () {
+                var oView = this.getView();
+                var oModel = oView.getModel();
+                var oAllPlants = oView.getModel("allPlants");
+                var oBinding = oModel.bindList("/Plants", undefined, undefined, undefined, {
+                    $expand: "community"
+                });
+                oBinding.requestContexts(0, 1000).then(function (aContexts) {
+                    var aPlants = (aContexts || []).map(function (oContext) {
+                        return oContext.getObject();
+                    });
+                    var iReady = 0, iAssigned = 0, iReview = 0;
+                    aPlants.forEach(function (oPlant) {
+                        if (oPlant.status === "READY_FOR_ASSIGNMENT") iReady++;
+                        if (oPlant.status === "ASSIGNED") iAssigned++;
+                        if (oPlant.status === "IN_REVIEW") iReview++;
+                    });
+                    oAllPlants.setProperty("/items", aPlants);
+                    oAllPlants.setProperty("/total", aPlants.length);
+                    oAllPlants.setProperty("/readyForAssignment", iReady);
+                    oAllPlants.setProperty("/assigned", iAssigned);
+                    oAllPlants.setProperty("/inReview", iReview);
+                    if (aPlants.length > 0) {
+                        this._selectPlant(aPlants[0]);
+                    } else {
+                        oAllPlants.setProperty("/selected", null);
+                        oAllPlants.setProperty("/checkpoints", []);
+                    }
+                }.bind(this)).catch(function () {
+                    oAllPlants.setProperty("/items", []);
+                    oAllPlants.setProperty("/total", 0);
+                    oAllPlants.setProperty("/readyForAssignment", 0);
+                    oAllPlants.setProperty("/assigned", 0);
+                    oAllPlants.setProperty("/inReview", 0);
+                    oAllPlants.setProperty("/selected", null);
+                    oAllPlants.setProperty("/checkpoints", []);
+                });
+            },
+
+            _selectPlant: function (oPlant) {
+                var oView = this.getView();
+                var oModel = oView.getModel();
+                var oAllPlants = oView.getModel("allPlants");
+                oAllPlants.setProperty("/selected", oPlant);
+                var oCheckpointsBinding = oModel.bindList("/PlantCheckpoints", undefined, undefined, undefined, {
+                    $filter: "plant_ID eq '" + oPlant.ID + "'"
+                });
+                oCheckpointsBinding.requestContexts(0, 1000).then(function (aContexts) {
+                    oAllPlants.setProperty("/checkpoints", (aContexts || []).map(function (oContext) {
+                        return oContext.getObject();
+                    }));
+                }).catch(function () {
+                    oAllPlants.setProperty("/checkpoints", []);
+                });
+            },
+
+            onSelectPlant: function (oEvent) {
+                var oItem = oEvent.getParameter("listItem") || oEvent.getSource();
+                var oContext = oItem.getBindingContext("allPlants");
+                if (!oContext) return;
+                this._selectPlant(oContext.getObject());
+            },
+
+            formatPlantStatusText: function (sStatus) {
+                return PLANT_STATUS_LABELS[sStatus] || sStatus || "-";
+            },
+
+            formatPlantStatusState: function (sStatus) {
+                return PLANT_STATUS_STATES[sStatus] || "None";
+            },
+
+            _loadBillingData: function () {
+                var oView = this.getView();
+                var oModel = oView.getModel();
+                var oBillingModel = oView.getModel("billing");
+                var oBillingBinding = oModel.bindList("/PaymentPositions", undefined, undefined, undefined, {
+                    $filter: "community_ID eq '" + DEMO_COMMUNITY_ID + "'"
+                });
+                oBillingBinding.requestContexts(0, 1000).then(function (aContexts) {
+                    oBillingModel.setProperty("/items", (aContexts || []).map(function (oContext) {
+                        return oContext.getObject();
+                    }));
+                }).catch(function () {
+                    oBillingModel.setProperty("/items", []);
+                });
+            },
+
+            _loadCustomerData: function () {
+                var oView = this.getView();
+                var oModel = oView.getModel();
+                var oCustomer = oView.getModel("customer");
+                var oDashboard = oView.getModel("dashboard");
+
+                oModel.bindContext("/Communities('" + DEMO_COMMUNITY_ID + "')").requestObject()
+                    .then(function (oCommunity) {
+                        oCustomer.setProperty("/community", oCommunity);
+                    });
+
+                oModel.bindContext("/Plants('" + DEMO_PLANT_ID + "')").requestObject()
+                    .then(function (oPlant) {
+                        oCustomer.setProperty("/plant", oPlant);
+                        oDashboard.setProperty("/generationToday", round(oPlant.generationTodayKwh));
+                        oDashboard.setProperty("/communityUsed", round(oPlant.communityTodayKwh));
+                        oDashboard.setProperty("/surplus", round(oPlant.surplusTodayKwh));
+                        oDashboard.setProperty("/usageRate", round(oPlant.usageRatePercent));
+                    });
+
+                oModel.bindList("/PaymentPositions", undefined, undefined, undefined, {
+                    $filter: "plant_ID eq '" + DEMO_PLANT_ID + "'"
+                }).requestContexts(0, 100).then(function (aContexts) {
+                    var aBilling = (aContexts || []).map(function (oContext) {
+                        return oContext.getObject();
+                    });
+                    var fRevenue = aBilling.reduce(function (fTotal, oPosition) {
+                        return fTotal + Number(oPosition.amount || 0);
+                    }, 0);
+                    oCustomer.setProperty("/billing", aBilling);
+                    oDashboard.setProperty("/revenue", round(fRevenue));
                 });
             },
 
@@ -214,6 +382,37 @@ sap.ui.define(
                     oPortal.setProperty("/view", "community");
                 }
                 this._loadCommunityDetails();
+            },
+
+            onShowPlants: function () {
+                var oPortal = this.getView().getModel("portal");
+                if (oPortal) {
+                    oPortal.setProperty("/view", "plants");
+                }
+                this._loadAllPlants();
+            },
+
+            onRefreshAllPlants: function () {
+                this._loadAllPlants();
+            },
+
+            _loadAllParticipants: function () {
+                var oParticipants = this.getView().getModel("allParticipants");
+                var oBinding = this.getView().getModel().bindList("/Participants", undefined, undefined, undefined, {
+                    $expand: "community"
+                });
+                oBinding.requestContexts(0, 1000).then(function (aContexts) {
+                    oParticipants.setProperty("/items", (aContexts || []).map(function (oContext) {
+                        return oContext.getObject();
+                    }));
+                }).catch(function () {
+                    oParticipants.setProperty("/items", []);
+                });
+            },
+
+            onShowParticipants: function () {
+                this.getView().getModel("portal").setProperty("/view", "participants");
+                this._loadAllParticipants();
             },
 
             onCommunityOverview: function () {
@@ -236,6 +435,18 @@ sap.ui.define(
                 if (oPortal) oPortal.setProperty("/communityTab", "billing");
             },
 
+            onRefreshCommunityParticipants: function () {
+                if (this._loadCommunityDetails) {
+                    this._loadCommunityDetails();
+                }
+            },
+
+            onRefreshBilling: function () {
+                if (this._loadBillingData) {
+                    this._loadBillingData();
+                }
+            },
+
             onLoginManager: function () {
                 var oPortal = this.getView().getModel("portal");
                 oPortal.setProperty("/authenticated", true);
@@ -247,13 +458,49 @@ sap.ui.define(
                 }
             },
 
+            onLogin: function () {
+                var oPortal = this.getView().getModel("portal");
+                var sEmail = String(oPortal.getProperty("/email") || "").trim().toLowerCase();
+                var sPassword = String(oPortal.getProperty("/password") || "");
+
+                oPortal.setProperty("/loginError", false);
+                if (sEmail === "lieferant@neo-energy.de" && sPassword === "demo") {
+                    this.onLoginManager();
+                    return;
+                }
+                if (sEmail === "jan.koller@neo-energy.de" && sPassword === "demo") {
+                    this.onLoginCustomer();
+                    return;
+                }
+                oPortal.setProperty("/loginError", true);
+            },
+
             onLoginCustomer: function () {
                 var oPortal = this.getView().getModel("portal");
                 oPortal.setProperty("/authenticated", true);
                 oPortal.setProperty("/role", "customer");
-                if (this._loadPortalData) {
-                    this._loadPortalData();
-                }
+                oPortal.setProperty("/view", "customerOverview");
+                this._loadCustomerData();
+            },
+
+            onShowCustomerOverview: function () {
+                this.getView().getModel("portal").setProperty("/view", "customerOverview");
+            },
+
+            onShowCustomerCommunity: function () {
+                this.getView().getModel("portal").setProperty("/view", "customerCommunity");
+            },
+
+            onShowCustomerPlant: function () {
+                this.getView().getModel("portal").setProperty("/view", "customerPlant");
+            },
+
+            onShowCustomerEnergy: function () {
+                this.getView().getModel("portal").setProperty("/view", "customerEnergy");
+            },
+
+            onShowCustomerBilling: function () {
+                this.getView().getModel("portal").setProperty("/view", "customerBilling");
             },
 
             onLogout: function () {
@@ -262,6 +509,9 @@ sap.ui.define(
                 oPortal.setProperty("/role", null);
                 oPortal.setProperty("/view", "dashboard");
                 oPortal.setProperty("/communityTab", "overview");
+                oPortal.setProperty("/email", "");
+                oPortal.setProperty("/password", "");
+                oPortal.setProperty("/loginError", false);
             },
 
             _loadParticipants: function (oDashboard) {},
@@ -285,7 +535,7 @@ sap.ui.define(
             },
 
             onRegisterPlant: function () {
-                window.location.href = "/neo.energy.energysharingportal/register/index.html";
+                window.location.href = sap.ui.require.toUrl("neo/energy/energysharingportal/register/index.html");
             },
 
             onAssignPlant: function () {

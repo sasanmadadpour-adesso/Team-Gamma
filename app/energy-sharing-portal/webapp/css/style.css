@@ -1,35 +1,37 @@
+.appRoot {
+    min-height: 100vh;
+    background: #f4f6f5;
+}
+
 .appShell {
     min-height: 100vh;
-    background: #f5f6f7;
     align-items: stretch;
 }
 
 .appSidebar {
     width: 14rem;
+    min-height: 100vh;
     background: #ffffff;
-    border-right: 1px solid #d9e0e5;
+    border-right: 1px solid #dde3e0;
     padding: 1.5rem 1rem;
     display: flex;
     flex-direction: column;
 }
 
 .appBrand {
-    color: #1d2d3e;
+    color: #1f2d3d;
     font-weight: 700;
-    letter-spacing: 0.04rem;
+    letter-spacing: 0.06rem;
     margin-bottom: 1.5rem;
 }
 
 .appSectionLabel {
-    color: #6a6d70;
-    font-size: 0.75rem;
+    color: #7a8581;
+    font-size: 0.73rem;
     font-weight: 700;
-    letter-spacing: 0.08rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
     margin: 1rem 0 0.5rem 0;
-}
-
-.appSectionLabelTop {
-    margin-top: 2rem;
 }
 
 .appNavButton {
@@ -37,15 +39,25 @@
     text-align: left;
     height: 2rem;
     margin-bottom: 0.125rem;
-    color: #32363a;
+    color: #394b4a;
 }
 
-.appNavButtonSelected {
-    background: #e6f4f3;
-    color: #007a78;
+.appNavButton:hover {
+    background: #f0f6f4;
+    color: #156b6a;
+}
+
+.appNavButtonSelected,
+.appNavButton[type="Emphasized"] {
+    background: #e4f3ee;
+    color: #0b7a6e;
     font-weight: 600;
-    border-left: 3px solid #007a78;
+    border-left: 3px solid #0b7a6e;
     border-radius: 0;
+}
+
+.appSectionLabelTop {
+    margin-top: 2rem;
 }
 
 .appSystemRow {
@@ -55,36 +67,40 @@
 }
 
 .appSystemName {
+    color: #394b4a;
     flex: 1 1 auto;
-    color: #32363a;
 }
 
 .appStatusDot {
-    color: #107e3e;
-    font-size: 0.75rem;
-    line-height: 1;
+    color: #1a9a6b;
+    font-size: 0.8rem;
 }
 
 .appSidebarFooter {
     margin-top: auto;
     padding-top: 1.5rem;
-    border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e6ebe8;
 }
 
 .appFooterTitle {
-    color: #1d2d3e;
+    color: #1f2d3d;
     font-weight: 600;
 }
 
 .appFooterText {
-    color: #6a6d70;
+    color: #7a8581;
     font-size: 0.8125rem;
+}
+
+.appSidebarFooter .appNavButton {
+    padding-left: 0;
+    margin-top: 0.5rem;
 }
 
 .appMain {
     flex: 1 1 auto;
     padding: 1.5rem 2rem;
-    background: #f5f6f7;
+    background: #f4f6f5;
 }
 
 .appContent {
@@ -93,15 +109,22 @@
 }
 
 .appEyebrow {
-    color: #6a6d70;
+    color: #0b7a6e;
     font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.08rem;
+    letter-spacing: 0.1rem;
     text-transform: uppercase;
+    margin-bottom: 0.5rem;
 }
 
 .appPageHeader {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.appPageHeader .sapMTitle {
+    color: #1f2d3d;
+    font-weight: 700;
+    margin: 0.125rem 0 0.5rem 0;
 }
 
 .appHeaderMeta {
@@ -113,25 +136,36 @@
 }
 
 .appSubtitle {
-    color: #5a6874;
+    color: #6a7573;
     margin-top: 0.25rem;
 }
 
 .appMuted {
-    color: #5a6874;
+    color: #6a7573;
 }
 
 .appSection {
-    margin-bottom: 2rem;
+    background: #ffffff;
+    border: 1px solid #d7ddda;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 2px rgba(20, 40, 38, 0.04);
+}
+
+.appSectionTitle {
+    color: #1f2d3d;
+    font-weight: 700;
 }
 
 .appSectionHeading {
-    color: #1d2d3e;
+    color: #1f2d3d;
     margin: 0.25rem 0 1rem 0;
+    font-weight: 600;
 }
 
 .appSectionSubtitle {
-    color: #5a6874;
+    color: #6a7573;
     margin: 0 0 0.75rem 0;
 }
 
@@ -142,49 +176,160 @@
 .dashboardKpiTile {
     min-width: 13rem;
     flex: 1 1 15rem;
-    padding: 1rem;
-    margin: 0.25rem;
-    border: 1px solid #d9e0e5;
-    border-radius: 0.25rem;
+    padding: 20px;
+    margin: 0.25rem 0;
+    border: 1px solid #d7ddda;
+    border-radius: 10px;
     background: #ffffff;
 }
 
-.dashboardKpiTile .sapMObjectNumberText,
+.dashboardKpiLabel {
+    color: #6a7573;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    margin-bottom: 0.5rem;
+}
+
+.dashboardKpiTile .sapMObjectNumber {
+    display: block;
+}
+
+.dashboardKpiTile .sapMObjectNumberInner {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3rem;
+}
+
+.dashboardKpiTile .sapMObjectNumberText {
+    color: #1f2d3d;
+    font-weight: 700;
+    font-size: 1.75rem;
+    line-height: 1.2;
+    vertical-align: baseline;
+}
+
 .dashboardKpiTile .sapMObjectNumberUnit {
-    color: #1d2d3e;
-}
-
-.appManagementRow a,
-.appManagementRow .sapMLnk {
-    color: #007a78;
-}
-
-.appStatusDot {
-    color: #107e3e;
+    color: #6a7573;
+    font-weight: 400;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    height: auto;
+    padding: 0;
+    vertical-align: baseline;
 }
 
 .appChartPanel {
     padding: 1rem;
     background: #ffffff;
-    border: 1px solid #d9e0e5;
-    border-radius: 0.25rem;
+    border: 1px solid #d7ddda;
+    border-radius: 10px;
+}
+
+.appManagementRow a,
+.appManagementRow .sapMLnk {
+    color: #0b7a6e;
+    font-weight: 500;
 }
 
 .communityInfoBox {
-    border: 1px solid #d9e0e5;
-    background: #ffffff;
-    padding: 0.5rem 1rem;
+    border: 1px solid #e3e8e6;
+    background: #fafcfb;
+    border-radius: 8px;
+    padding: 0.25rem 1rem;
 }
 
 .communityInfoRow {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #e5e5e5;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid #e3e8e6;
 }
 
 .communityInfoRow:last-child {
     border-bottom: none;
 }
 
+.appEmptyState {
+    padding: 1.5rem 0;
+    text-align: center;
+}
+
 .appTabRow .sapMBtn {
     margin-right: 0.5rem;
+}
+
+.appLoginPage .sapMTitle,
+.appLoginBrand {
+    color: #0b7a6e;
+}
+
+.appLoginScreen {
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: #f4f6f5;
+}
+
+.appLoginStage {
+    width: 100%;
+    max-width: 960px;
+    text-align: center;
+}
+
+.appLoginBrand {
+    letter-spacing: 0.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.appLoginTitle {
+    color: #1f2d3d;
+    margin-bottom: 0.5rem;
+}
+
+.appLoginText {
+    color: #6a7573;
+    margin-bottom: 1rem;
+}
+
+.appLoginSubtitle {
+    color: #6a7573;
+    margin-bottom: 2rem;
+}
+
+.appLoginHint {
+    color: #8a9491;
+    margin-top: 2rem;
+    font-size: 0.8125rem;
+}
+
+.appLoginCards {
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.appRoleCard {
+    flex: 1 1 22rem;
+    min-width: 18rem;
+    max-width: 30rem;
+    background: #ffffff;
+    border: 1px solid #d7ddda;
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 0.5rem;
+    text-align: left;
+    box-shadow: 0 1px 3px rgba(20, 40, 38, 0.05);
+}
+
+.appRoleCardTop {
+    margin-bottom: 1.5rem;
+}
+
+.appRoleButton {
+    width: 100%;
+}
+
+.appLoginForm {
+    margin: 0 auto;
+    text-align: left;
 }

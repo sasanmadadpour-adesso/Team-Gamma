@@ -9,59 +9,64 @@
 
     <VBox class="appRoot" width="100%">
         <VBox class="appLoginScreen" width="100%" visible="{= ${portal>/authenticated} !== true }">
-            <VBox class="appLoginPanel">
-                <Title text="ENERGY SHARING" titleStyle="H1" class="appLoginBrand"/>
-                <Title text="Willkommen bei Energy Sharing" titleStyle="H3" class="appLoginTitle"/>
-                <Text text="Bitte wählen Sie für die Demo Ihre Rolle." class="appLoginText"/>
-
-                <VBox class="appLoginChoice">
-                    <Title text="Lieferant / Community Manager" titleStyle="H5"/>
-                    <Text text="Communities, Anlagen und Teilnehmer verwalten" class="appLoginText"/>
-                    <Button text="Als Lieferant anmelden" type="Emphasized" press=".onLoginManager"/>
+            <VBox class="appLoginStage">
+                <Text text="ENERGY SHARING / NEO UTILITY" class="appLoginBrand"/>
+                <Title text="Willkommen bei Energy Sharing" titleStyle="H1" class="appLoginTitle"/>
+                <Text text="Melden Sie sich an, um Ihre Energy-Sharing-Übersicht zu öffnen." class="appLoginSubtitle"/>
+                <VBox class="appRoleCard appLoginForm">
+                    <Label text="E-Mail" labelFor="loginEmail"/>
+                    <Input id="loginEmail" value="{portal>/email}" type="Email" placeholder="E-Mail-Adresse" class="sapUiTinyMarginBottom"/>
+                    <Label text="Passwort" labelFor="loginPassword"/>
+                    <Input id="loginPassword" value="{portal>/password}" type="Password" placeholder="Passwort" submit=".onLogin" class="sapUiSmallMarginBottom"/>
+                    <MessageStrip
+                        text="E-Mail oder Passwort ist nicht korrekt."
+                        type="Error"
+                        showIcon="true"
+                        visible="{portal>/loginError}"
+                        class="sapUiSmallMarginBottom"/>
+                    <Button text="Anmelden" type="Emphasized" press=".onLogin" class="appRoleButton"/>
                 </VBox>
-
-                <VBox class="appLoginChoice">
-                    <Title text="Kunde" titleStyle="H5"/>
-                    <Text text="Eigene Teilnahme, Energie und Abrechnung einsehen" class="appLoginText"/>
-                    <Button text="Als Kunde anmelden" type="Default" press=".onLoginCustomer"/>
-                </VBox>
+                <Text text="Demo-Zugang · keine produktive Authentifizierung" class="appLoginHint"/>
             </VBox>
         </VBox>
 
         <HBox class="appShell" width="100%" visible="{= ${portal>/authenticated} === true }">
             <VBox class="appSidebar" width="14rem">
+                <Title text="ENERGY SHARING" titleStyle="H5" class="appBrand"/>
+
                 <VBox visible="{= ${portal>/role} === 'manager' }">
-                    <Title text="ENERGY SHARING" titleStyle="H5" class="appBrand"/>
                     <Text text="NAVIGATION" class="appSectionLabel"/>
                     <Button text="Übersicht" type="{= ${portal>/view} === 'dashboard' ? 'Emphasized' : 'Transparent' }" press=".onShowDashboard" class="appNavButton"/>
                     <Button text="Communities" type="{= ${portal>/view} === 'community' ? 'Emphasized' : 'Transparent' }" press=".onShowCommunity" class="appNavButton"/>
-                    <Button text="Anlagen" type="Transparent" press=".onProducerPortal" class="appNavButton"/>
-                    <Button text="Teilnehmer" type="Transparent" press=".onParticipantOnboarding" class="appNavButton"/>
-                    <Text text="SYSTEME" class="appSectionLabel appSectionLabelTop"/>
-                    <HBox alignItems="Center" class="appSystemRow">
+                    <Button text="Anlagen" type="{= ${portal>/view} === 'plants' ? 'Emphasized' : 'Transparent' }" press=".onShowPlants" class="appNavButton"/>
+                    <Button text="Teilnehmer" type="{= ${portal>/view} === 'participants' ? 'Emphasized' : 'Transparent' }" press=".onShowParticipants" class="appNavButton"/>
+                </VBox>
+
+                <VBox visible="{= ${portal>/role} === 'customer' }">
+                    <Text text="NAVIGATION" class="appSectionLabel"/>
+                    <Button text="Übersicht" type="{= ${portal>/view} === 'customerOverview' ? 'Emphasized' : 'Transparent' }" press=".onShowCustomerOverview" class="appNavButton"/>
+                    <Button text="Meine Community" type="{= ${portal>/view} === 'customerCommunity' ? 'Emphasized' : 'Transparent' }" press=".onShowCustomerCommunity" class="appNavButton"/>
+                    <Button text="Meine Anlage" type="{= ${portal>/view} === 'customerPlant' ? 'Emphasized' : 'Transparent' }" press=".onShowCustomerPlant" class="appNavButton"/>
+                    <Button text="Meine Energie" type="{= ${portal>/view} === 'customerEnergy' ? 'Emphasized' : 'Transparent' }" press=".onShowCustomerEnergy" class="appNavButton"/>
+                    <Button text="Abrechnung" type="{= ${portal>/view} === 'customerBilling' ? 'Emphasized' : 'Transparent' }" press=".onShowCustomerBilling" class="appNavButton"/>
+                </VBox>
+
+                <VBox class="appSidebarGroup">
+                    <Text text="SYSTEME" class="appSectionLabel"/>
+                    <HBox alignItems="Center" class="appSystemRow" visible="{= ${portal>/role} === 'manager' }">
                         <Text text="SAP S/4HANA" class="appSystemName"/>
                         <Text text="●" class="appStatusDot appStatusSuccess"/>
                     </HBox>
-                    <HBox alignItems="Center" class="appSystemRow">
+                    <HBox alignItems="Center" class="appSystemRow" visible="{= ${portal>/role} === 'manager' }">
                         <Text text="Lumenaza" class="appSystemName"/>
                         <Text text="●" class="appStatusDot appStatusSuccess"/>
                     </HBox>
                 </VBox>
 
-                <VBox visible="{= ${portal>/role} === 'customer' }">
-                    <Title text="ENERGY SHARING" titleStyle="H5" class="appBrand"/>
-                    <Text text="NAVIGATION" class="appSectionLabel"/>
-                    <Button text="Übersicht" type="Emphasized" class="appNavButton"/>
-                    <Button text="Meine Community" type="Transparent" class="appNavButton"/>
-                    <Button text="Meine Anlage" type="Transparent" class="appNavButton"/>
-                    <Button text="Meine Energie" type="Transparent" class="appNavButton"/>
-                    <Button text="Abrechnung" type="Transparent" class="appNavButton"/>
-                </VBox>
-
-                <VBox class="appSidebarFooter" visible="{= ${portal>/authenticated} === true }">
+                <VBox class="appSidebarFooter">
                     <Text text="Energy Sharing" class="appFooterTitle"/>
                     <Text text="{= ${portal>/role} === 'manager' ? 'Lieferant / Community Manager' : 'Kunde' }" class="appFooterText"/>
-                    <Button text="Abmelden" type="Transparent" press=".onLogout" class="appNavButton"/>
+                    <Button text="Abmelden" type="Transparent" press=".onLogout" class="appNavButton appLogoutButton"/>
                 </VBox>
             </VBox>
 
@@ -82,23 +87,23 @@
                         <Title text="Energie heute" titleStyle="H3" class="appSectionHeading"/>
                         <FlexBox wrap="Wrap" alignItems="Stretch" class="dashboardKpiRow">
                             <VBox class="dashboardKpiTile">
-                                <Label text="Erzeugung"/>
+                                <Text text="Erzeugung" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/generationToday}" unit="kWh" emphasized="true"/>
                             </VBox>
                             <VBox class="dashboardKpiTile">
-                                <Label text="Community-Nutzung"/>
+                                <Text text="Community-Nutzung" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/communityUsed}" unit="kWh" emphasized="true"/>
                             </VBox>
                             <VBox class="dashboardKpiTile">
-                                <Label text="Überschuss"/>
+                                <Text text="Überschuss" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/surplus}" unit="kWh" emphasized="true"/>
                             </VBox>
                             <VBox class="dashboardKpiTile">
-                                <Label text="Nutzungsquote"/>
+                                <Text text="Nutzungsquote" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/usageRate}" unit=" %" emphasized="true"/>
                             </VBox>
                             <VBox class="dashboardKpiTile">
-                                <Label text="Erlös"/>
+                                <Text text="Erlös" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/revenue}" unit="EUR" emphasized="true"/>
                             </VBox>
                         </FlexBox>
@@ -256,19 +261,19 @@
                         <Title text="Energie heute" titleStyle="H3" class="appSectionHeading"/>
                         <FlexBox wrap="Wrap" alignItems="Stretch" class="dashboardKpiRow">
                             <VBox class="dashboardKpiTile">
-                                <Label text="Erzeugung"/>
+                                <Text text="Erzeugung" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/generationToday}" unit="kWh" emphasized="true"/>
                             </VBox>
                             <VBox class="dashboardKpiTile">
-                                <Label text="Community-Nutzung"/>
+                                <Text text="Community-Nutzung" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/communityUsed}" unit="kWh" emphasized="true"/>
                             </VBox>
                             <VBox class="dashboardKpiTile">
-                                <Label text="Überschuss"/>
+                                <Text text="Überschuss" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/surplus}" unit="kWh" emphasized="true"/>
                             </VBox>
                             <VBox class="dashboardKpiTile">
-                                <Label text="Nutzungsquote"/>
+                                <Text text="Nutzungsquote" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/usageRate}" unit=" %" emphasized="true"/>
                             </VBox>
                         </FlexBox>
@@ -327,52 +332,376 @@
                     </VBox>
 
                     <VBox class="appSection" visible="{= ${portal>/communityTab} === 'participants' }">
-                        <Text text="Teilnehmer folgt."/>
+                        <Text text="OBJECT PAGE" class="appEyebrow"/>
+                        <Title text="Teilnehmer und laufende Anmeldungen" titleStyle="H3" class="appSectionHeading"/>
+                        <HBox justifyContent="End" class="sapUiSmallMarginBottom">
+                            <Button text="Teilnehmer aufnehmen" type="Default" icon="sap-icon://person-placeholder" press=".onOnboardParticipant"/>
+                        </HBox>
+                        <Table items="{communityParticipants>/items}" growing="true" growingThreshold="20">
+                            <columns>
+                                <Column><Text text="Teilnehmer"/></Column>
+                                <Column><Text text="Kundentyp"/></Column>
+                                <Column><Text text="MaLo"/></Column>
+                                <Column><Text text="Status"/></Column>
+                                <Column><Text text="Verbrauch / Jahr"/></Column>
+                                <Column><Text text="Gemeinschaftsmenge"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{communityParticipants>firstName} {communityParticipants>lastName}"/>
+                                        <Text text="{communityParticipants>customerType}"/>
+                                        <Text text="{communityParticipants>marketLocationId}"/>
+                                        <ObjectStatus
+                                            text="{= ${communityParticipants>status} === 'ACTIVE' ? 'Aktiv' : (${communityParticipants>status} === 'REJECTED' ? 'Abgelehnt' : 'Offen') }"
+                                            state="{= ${communityParticipants>status} === 'ACTIVE' ? 'Success' : (${communityParticipants>status} === 'REJECTED' ? 'Error' : 'Warning') }"/>
+                                        <Text text="-"/>
+                                        <Text text="-"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+
+                        <VBox class="appSection">
+                            <Text text="TEILNAHMEANMELDUNG" class="appEyebrow"/>
+                            <Title text="Laufende Anmeldungen" titleStyle="H4" class="appSectionHeading"/>
+                            <Text text="Neue Anmeldungen werden hier nach Eingang der Prüfpunkte angezeigt." class="appSectionSubtitle"/>
+                            <Button text="Aktualisieren" type="Default" press=".onRefreshCommunityParticipants" class="sapUiSmallMarginTop"/>
+                        </VBox>
                     </VBox>
 
                     <VBox class="appSection" visible="{= ${portal>/communityTab} === 'billing' }">
-                        <Text text="Abrechnung folgt."/>
+                        <Text text="ABRECHNUNG" class="appEyebrow"/>
+                        <Title text="Abrechnung &amp; Erlöse" titleStyle="H3" class="appSectionHeading"/>
+                        <Text text="Abrechnungsübersicht der Energy-Sharing-Community" class="appSectionSubtitle"/>
+                        <FlexBox wrap="Wrap" alignItems="Stretch" class="dashboardKpiRow">
+                            <VBox class="dashboardKpiTile">
+                                <Text text="Community-Menge" class="dashboardKpiLabel"/>
+                                <ObjectNumber number="{dashboard>/communityUsed}" unit="kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Text text="Überschuss" class="dashboardKpiLabel"/>
+                                <ObjectNumber number="{dashboard>/surplus}" unit="kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Text text="Erlöse" class="dashboardKpiLabel"/>
+                                <ObjectNumber number="{dashboard>/revenue}" unit="EUR" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Text text="Arbeitspreis" class="dashboardKpiLabel"/>
+                                <ObjectNumber number="{community>/fixedPricePerKwh}" unit="EUR/kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Text text="Reststrompreis" class="dashboardKpiLabel"/>
+                                <ObjectNumber number="{community>/residualPricePerKwh}" unit="EUR/kWh" emphasized="true"/>
+                            </VBox>
+                        </FlexBox>
+                    </VBox>
+
+                    <VBox class="appSection" visible="{= ${portal>/communityTab} === 'billing' }">
+                        <Text text="VERTRAG &amp; PREISMODELL" class="appEyebrow"/>
+                        <Title text="Community-Abrechnung" titleStyle="H3" class="appSectionHeading"/>
+                        <VBox class="communityInfoBox">
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Preismodell"/>
+                                <Text text="{community>/priceModelLabel}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Arbeitspreis"/>
+                                <Text text="{community>/fixedPricePerKwh} EUR/kWh"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Reststrompreis"/>
+                                <Text text="{community>/residualPricePerKwh} EUR/kWh"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Gültig ab"/>
+                                <Text text="{community>/validFrom}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Gültig bis"/>
+                                <Text text="{= ${community>/validTo} ? ${community>/validTo} : '-' }"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Bilanzkreis-ID"/>
+                                <Text text="{community>/bkId}"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <VBox class="appSection" visible="{= ${portal>/communityTab} === 'billing' }">
+                        <Text text="ZAHLUNGSPOSITIONEN" class="appEyebrow"/>
+                        <Title text="Erlöse des Einspeisers" titleStyle="H3" class="appSectionHeading"/>
+                        <Table items="{billing>/items}" growing="true" growingThreshold="20" visible="{= (${billing>/items} || []).length > 0 }">
+                            <columns>
+                                <Column><Text text="Art"/></Column>
+                                <Column><Text text="Menge"/></Column>
+                                <Column><Text text="Satz"/></Column>
+                                <Column><Text text="Betrag"/></Column>
+                                <Column><Text text="Zeitraum"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{billing>positionType}"/>
+                                        <Text text="{= Number(${billing>quantityKwh}).toFixed(2) } kWh"/>
+                                        <Text text="{= Number(${billing>ratePerKwh}).toFixed(4) } EUR/kWh"/>
+                                        <Text text="{= Number(${billing>amount}).toFixed(2) } EUR"/>
+                                        <Text text="{billing>periodStart} – {billing>periodEnd}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                        <VBox class="appEmptyState" visible="{= (${billing>/items} || []).length === 0 }">
+                            <Text text="Noch keine Zahlungspositionen für diese Community vorhanden." class="appSectionSubtitle"/>
+                        </VBox>
+                        <Button text="Aktualisieren" type="Default" press=".onRefreshBilling" class="sapUiSmallMarginTop"/>
+                    </VBox>
+
+                    <VBox class="appSection" visible="{= ${portal>/communityTab} === 'billing' }">
+                        <Text text="BETRIEB" class="appEyebrow"/>
+                        <Title text="Energieverteilung heute" titleStyle="H3" class="appSectionHeading"/>
+                        <VBox class="communityInfoBox">
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Erzeugung"/>
+                                <Text text="{dashboard>/generationToday} kWh"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Community-Nutzung"/>
+                                <Text text="{dashboard>/communityUsed} kWh"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Überschuss"/>
+                                <Text text="{dashboard>/surplus} kWh"/>
+                            </HBox>
+                        </VBox>
                     </VBox>
                 </VBox>
 
-                <VBox class="appContent" visible="{= ${portal>/role} === 'customer' }">
+                <VBox class="appContent" visible="{= ${portal>/role} === 'manager' &amp;&amp; ${portal>/view} === 'plants' }">
+                    <VBox class="appPageHeader">
+                        <Text text="ANLAGEN" class="appEyebrow"/>
+                        <HBox justifyContent="SpaceBetween" alignItems="Center" wrap="Wrap">
+                            <Title text="Einspeiseanlagen" titleStyle="H1"/>
+                            <Button text="Anlage anmelden" type="Emphasized" icon="sap-icon://add" press=".onRegisterPlant"/>
+                        </HBox>
+                        <Text text="Registrierte Erzeugungsanlagen und ihr aktueller Zuordnungsstatus" class="appSubtitle"/>
+                    </VBox>
+
+                    <VBox class="appSection">
+                        <Text text="ÜBERSICHT" class="appEyebrow"/>
+                        <Title text="Kennzahlen" titleStyle="H3" class="appSectionHeading"/>
+                        <FlexBox wrap="Wrap" alignItems="Stretch" class="dashboardKpiRow">
+                            <VBox class="dashboardKpiTile">
+                                <Text text="Anlagen" class="dashboardKpiLabel"/>
+                                <ObjectNumber number="{allPlants>/total}" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Text text="Bereit zur Zuordnung" class="dashboardKpiLabel"/>
+                                <ObjectNumber number="{allPlants>/readyForAssignment}" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Text text="Zugeordnet" class="dashboardKpiLabel"/>
+                                <ObjectNumber number="{allPlants>/assigned}" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Text text="In Prüfung" class="dashboardKpiLabel"/>
+                                <ObjectNumber number="{allPlants>/inReview}" emphasized="true"/>
+                            </VBox>
+                        </FlexBox>
+                    </VBox>
+
+                    <VBox class="appSection">
+                        <Text text="VERWALTUNG" class="appEyebrow"/>
+                        <Title text="Registrierte Anlagen" titleStyle="H3" class="appSectionHeading"/>
+                        <Table items="{allPlants>/items}" growing="true" growingThreshold="20" mode="SingleSelectMaster" selectionChange=".onSelectPlant">
+                            <columns>
+                                <Column><Text text="Anlage"/></Column>
+                                <Column><Text text="Betreiber"/></Column>
+                                <Column><Text text="Erzeugungsart"/></Column>
+                                <Column><Text text="Leistung"/></Column>
+                                <Column><Text text="MaLo"/></Column>
+                                <Column><Text text="MeLo"/></Column>
+                                <Column><Text text="iMSys"/></Column>
+                                <Column><Text text="Bilanzierungsgebiet"/></Column>
+                                <Column><Text text="Bilanzkreis"/></Column>
+                                <Column><Text text="Status"/></Column>
+                                <Column><Text text="Community"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{allPlants>operatorName}"/>
+                                        <Text text="{allPlants>operatorName}"/>
+                                        <Text text="{allPlants>productionType}"/>
+                                        <Text text="{= Number(${allPlants>capacityKw}).toFixed(2) } kW"/>
+                                        <Text text="{allPlants>marketLocationId}"/>
+                                        <Text text="{= ${allPlants>meteringLocationId} ? ${allPlants>meteringLocationId} : '-' }"/>
+                                        <Text text="{= ${allPlants>imsysActive} ? 'Aktiv (' + (${allPlants>meteringSystem} || '-') + ')' : 'Inaktiv' }"/>
+                                        <Text text="{= ${allPlants>balancingArea} ? ${allPlants>balancingArea} : '-' }"/>
+                                        <Text text="{= ${allPlants>bkId} ? ${allPlants>bkId} : '-' }"/>
+                                        <ObjectStatus text="{path: 'allPlants>status', formatter: '.formatPlantStatusText'}" state="{path: 'allPlants>status', formatter: '.formatPlantStatusState'}"/>
+                                        <Text text="{= ${allPlants>community/name} ? ${allPlants>community/name} : '-' }"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                        <Button text="Aktualisieren" type="Default" press=".onRefreshAllPlants" class="sapUiSmallMarginTop"/>
+                    </VBox>
+
+                    <VBox class="appSection" visible="{= !!${allPlants>/selected} }">
+                        <Text text="DETAILANSICHT" class="appEyebrow"/>
+                        <Title text="{allPlants>/selected/operatorName}" titleStyle="H3" class="appSectionHeading"/>
+                        <VBox class="communityInfoBox">
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Anlagenbetreiber"/>
+                                <Text text="{allPlants>/selected/operatorName}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="E-Mail"/>
+                                <Text text="{= ${allPlants>/selected/email} ? ${allPlants>/selected/email} : '-' }"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Erzeugungsart"/>
+                                <Text text="{allPlants>/selected/productionType}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Leistung"/>
+                                <Text text="{= Number(${allPlants>/selected/capacityKw}).toFixed(2) } kW"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Adresse"/>
+                                <Text text="{= ${allPlants>/selected/address} ? ${allPlants>/selected/address} : '-' }"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Gebäude-ID"/>
+                                <Text text="{= ${allPlants>/selected/buildingId} ? ${allPlants>/selected/buildingId} : '-' }"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Einspeise-MaLo"/>
+                                <Text text="{allPlants>/selected/marketLocationId}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Messlokation"/>
+                                <Text text="{= ${allPlants>/selected/meteringLocationId} ? ${allPlants>/selected/meteringLocationId} : '-' }"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Zählernummer"/>
+                                <Text text="{= ${allPlants>/selected/meterNumber} ? ${allPlants>/selected/meterNumber} : '-' }"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Messsystem / iMSys"/>
+                                <Text text="{= ${allPlants>/selected/imsysActive} ? 'Aktiv (' + (${allPlants>/selected/meteringSystem} || '-') + ')' : 'Inaktiv' }"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Bilanzierungsgebiet"/>
+                                <Text text="{= ${allPlants>/selected/balancingArea} ? ${allPlants>/selected/balancingArea} : '-' }"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Bilanzkreis-ID"/>
+                                <Text text="{= ${allPlants>/selected/bkId} ? ${allPlants>/selected/bkId} : '-' }"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Gewünschter Start"/>
+                                <Text text="{= ${allPlants>/selected/desiredStart} ? ${allPlants>/selected/desiredStart} : '-' }"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Status"/>
+                                <ObjectStatus text="{path: 'allPlants>/selected/status', formatter: '.formatPlantStatusText'}" state="{path: 'allPlants>/selected/status', formatter: '.formatPlantStatusState'}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Community"/>
+                                <Text text="{= ${allPlants>/selected/community/name} ? ${allPlants>/selected/community/name} : '-' }"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="appSection">
+                            <Text text="PRÜFPUNKTE" class="appEyebrow"/>
+                            <Title text="Validierung (Aktion 4)" titleStyle="H4" class="appSectionHeading"/>
+                            <Table items="{allPlants>/checkpoints}" growing="true" growingThreshold="20" visible="{= (${allPlants>/checkpoints} || []).length > 0 }">
+                                <columns>
+                                    <Column><Text text="Prüfpunkt"/></Column>
+                                    <Column><Text text="Status"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{allPlants>label}"/>
+                                            <ObjectStatus
+                                                text="{= ${allPlants>status} === 'POSITIVE' ? 'Positiv' : (${allPlants>status} === 'NEGATIVE' ? 'Negativ' : 'Offen') }"
+                                                state="{= ${allPlants>status} === 'POSITIVE' ? 'Success' : (${allPlants>status} === 'NEGATIVE' ? 'Error' : 'Warning') }"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                            <VBox class="appEmptyState" visible="{= (${allPlants>/checkpoints} || []).length === 0 }">
+                                <Text text="Keine Prüfpunkte für diese Anlage vorhanden." class="appSectionSubtitle"/>
+                            </VBox>
+                        </VBox>
+                    </VBox>
+                </VBox>
+
+                <VBox class="appContent" visible="{= ${portal>/role} === 'manager' &amp;&amp; ${portal>/view} === 'participants' }">
+                    <VBox class="appPageHeader">
+                        <Text text="TEILNEHMER" class="appEyebrow"/>
+                        <Title text="Teilnehmerübersicht" titleStyle="H1"/>
+                        <Text text="Teilnehmer der Energy-Sharing-Communities" class="appSubtitle"/>
+                    </VBox>
+
+                    <VBox class="appSection">
+                        <Table items="{allParticipants>/items}" growing="true" growingThreshold="20">
+                            <columns>
+                                <Column><Text text="Name"/></Column>
+                                <Column><Text text="Kundentyp"/></Column>
+                                <Column><Text text="E-Mail"/></Column>
+                                <Column><Text text="MaLo"/></Column>
+                                <Column><Text text="Status"/></Column>
+                                <Column><Text text="Community"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{allParticipants>firstName} {allParticipants>lastName}"/>
+                                        <Text text="{allParticipants>customerType}"/>
+                                        <Text text="{allParticipants>email}"/>
+                                        <Text text="{allParticipants>marketLocationId}"/>
+                                        <ObjectStatus
+                                            text="{= ${allParticipants>status} === 'ACTIVE' ? 'Aktiv' : (${allParticipants>status} === 'REJECTED' ? 'Abgelehnt' : 'Offen') }"
+                                            state="{= ${allParticipants>status} === 'ACTIVE' ? 'Success' : (${allParticipants>status} === 'REJECTED' ? 'Error' : 'Warning') }"/>
+                                        <Text text="{= ${allParticipants>community/name} ? ${allParticipants>community/name} : '-' }"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </VBox>
+                </VBox>
+
+                <VBox class="appContent" visible="{= ${portal>/role} === 'customer' &amp;&amp; ${portal>/view} === 'customerOverview' }">
                     <VBox class="appPageHeader">
                         <Text text="MEINE ÜBERSICHT" class="appEyebrow"/>
                         <Title text="Hallo Jan Koller" titleStyle="H1"/>
                         <HBox alignItems="Center" wrap="Wrap" class="appHeaderMeta">
-                            <Text text="Sonnenquartier Frankfurt" class="appMuted appHeaderLocation"/>
-                            <ObjectStatus text="Aktiv" state="Success"/>
+                            <Text text="{customer>/community/name}" class="appMuted appHeaderLocation"/>
+                            <ObjectStatus text="{= ${customer>/community/status} === 'ACTIVE' ? 'Aktiv' : ${customer>/community/status} }" state="Success"/>
                         </HBox>
-                        <Text text="Meine Energie im Sonnenquartier Frankfurt" class="appSubtitle"/>
+                        <Text text="Meine Anlage und Energie auf einen Blick" class="appSubtitle"/>
                     </VBox>
 
                     <VBox class="appSection">
                         <Text text="MEINE ANLAGE" class="appEyebrow"/>
-                        <Title text="Jan Koller" titleStyle="H3" class="appSectionHeading"/>
+                        <Title text="{customer>/plant/operatorName}" titleStyle="H3" class="appSectionHeading"/>
                         <VBox class="communityInfoBox">
                             <HBox justifyContent="SpaceBetween" class="communityInfoRow">
                                 <Text text="Erzeugungsart"/>
-                                <Text text="{plantView>/plant/productionType}"/>
+                                <Text text="{customer>/plant/productionType}"/>
                             </HBox>
                             <HBox justifyContent="SpaceBetween" class="communityInfoRow">
                                 <Text text="Leistung"/>
-                                <Text text="{plantView>/plant/capacityKw} kW"/>
-                            </HBox>
-                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
-                                <Text text="Einspeise-MaLo"/>
-                                <Text text="{plantView>/plant/marketLocationId}"/>
-                            </HBox>
-                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
-                                <Text text="Messlokation"/>
-                                <Text text="{plantView>/plant/meteringLocationId}"/>
-                            </HBox>
-                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
-                                <Text text="iMSys"/>
-                                <Text text="{= ${plantView>/plant/imsysActive} ? 'Aktiv' : 'Inaktiv' } ({plantView>/plant/meteringSystem})"/>
+                                <Text text="{customer>/plant/capacityKw} kW"/>
                             </HBox>
                             <HBox justifyContent="SpaceBetween" class="communityInfoRow">
                                 <Text text="Status"/>
-                                <ObjectStatus text="{= ${plantView>/plant/status} === 'ASSIGNED' ? 'Zugeordnet' : ${plantView>/plant/status} }" state="Success"/>
+                                <ObjectStatus text="{path: 'customer>/plant/status', formatter: '.formatPlantStatusText'}" state="{path: 'customer>/plant/status', formatter: '.formatPlantStatusState'}"/>
                             </HBox>
                         </VBox>
                     </VBox>
@@ -382,59 +711,90 @@
                         <Title text="Energie heute" titleStyle="H3" class="appSectionHeading"/>
                         <FlexBox wrap="Wrap" alignItems="Stretch" class="dashboardKpiRow">
                             <VBox class="dashboardKpiTile">
-                                <Label text="Erzeugung"/>
+                                <Text text="Erzeugung" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/generationToday}" unit="kWh" emphasized="true"/>
                             </VBox>
                             <VBox class="dashboardKpiTile">
-                                <Label text="Community-Nutzung"/>
+                                <Text text="Community-Nutzung" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/communityUsed}" unit="kWh" emphasized="true"/>
                             </VBox>
                             <VBox class="dashboardKpiTile">
-                                <Label text="Überschuss"/>
+                                <Text text="Überschuss" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/surplus}" unit="kWh" emphasized="true"/>
                             </VBox>
                             <VBox class="dashboardKpiTile">
-                                <Label text="Nutzungsquote"/>
+                                <Text text="Nutzungsquote" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/usageRate}" unit=" %" emphasized="true"/>
                             </VBox>
                             <VBox class="dashboardKpiTile">
-                                <Label text="Erlös"/>
+                                <Text text="Erlös" class="dashboardKpiLabel"/>
                                 <ObjectNumber number="{dashboard>/revenue}" unit="EUR" emphasized="true"/>
                             </VBox>
                         </FlexBox>
                     </VBox>
 
+                </VBox>
+
+                <VBox class="appContent" visible="{= ${portal>/role} === 'customer' &amp;&amp; ${portal>/view} === 'customerCommunity' }">
+                    <VBox class="appPageHeader">
+                        <Text text="MEINE COMMUNITY" class="appEyebrow"/>
+                        <Title text="{customer>/community/name}" titleStyle="H1"/>
+                        <Text text="Meine Energy-Sharing-Community" class="appSubtitle"/>
+                    </VBox>
                     <VBox class="appSection">
-                        <Text text="MEINE ENERGIE HEUTE" class="appEyebrow"/>
-                        <Title text="Energieverlauf" titleStyle="H3" class="appSectionHeading"/>
-                        <VBox class="appChartPanel">
-                            <viz:VizFrame
-                                id="customerEnergyChart"
-                                height="350px"
-                                width="100%"
-                                vizType="line">
-                                <viz:dataset>
-                                    <vizData:FlattenedDataset data="{dashboard>/chartData}">
-                                        <vizData:dimensions>
-                                            <vizData:DimensionDefinition name="Zeit" value="{timeLabel}"/>
-                                        </vizData:dimensions>
-                                        <vizData:measures>
-                                            <vizData:MeasureDefinition name="Erzeugung" value="{generationKwh}"/>
-                                            <vizData:MeasureDefinition name="Community-Nutzung" value="{communityKwh}"/>
-                                            <vizData:MeasureDefinition name="Prognose" value="{forecastKwh}"/>
-                                            <vizData:MeasureDefinition name="Überschuss" value="{surplusKwh}"/>
-                                        </vizData:measures>
-                                    </vizData:FlattenedDataset>
-                                </viz:dataset>
-                                <viz:feeds>
-                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Erzeugung"/>
-                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Community-Nutzung"/>
-                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Prognose"/>
-                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Überschuss"/>
-                                    <vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Zeit"/>
-                                </viz:feeds>
-                            </viz:VizFrame>
+                        <VBox class="communityInfoBox">
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow"><Text text="Status"/><ObjectStatus text="{= ${customer>/community/status} === 'ACTIVE' ? 'Aktiv' : ${customer>/community/status} }" state="Success"/></HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow"><Text text="Standort"/><Text text="{customer>/community/location}"/></HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow"><Text text="Preismodell"/><Text text="{= ${customer>/community/priceModel} === 'FIXED_PRICE' ? 'Festpreis' : ${customer>/community/priceModel} }"/></HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow"><Text text="Arbeitspreis"/><Text text="{customer>/community/fixedPricePerKwh} EUR/kWh"/></HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow"><Text text="Reststrompreis"/><Text text="{customer>/community/residualPricePerKwh} EUR/kWh"/></HBox>
                         </VBox>
+                    </VBox>
+                </VBox>
+
+                <VBox class="appContent" visible="{= ${portal>/role} === 'customer' &amp;&amp; ${portal>/view} === 'customerPlant' }">
+                    <VBox class="appPageHeader">
+                        <Text text="MEINE ANLAGE" class="appEyebrow"/>
+                        <Title text="{customer>/plant/operatorName}" titleStyle="H1"/>
+                        <ObjectStatus text="{path: 'customer>/plant/status', formatter: '.formatPlantStatusText'}" state="{path: 'customer>/plant/status', formatter: '.formatPlantStatusState'}"/>
+                    </VBox>
+                    <VBox class="appSection">
+                        <VBox class="communityInfoBox">
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow"><Text text="Erzeugungsart"/><Text text="{customer>/plant/productionType}"/></HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow"><Text text="Installierte Leistung"/><Text text="{customer>/plant/capacityKw} kW"/></HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow"><Text text="Einspeise-MaLo"/><Text text="{customer>/plant/marketLocationId}"/></HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow"><Text text="Messlokation"/><Text text="{customer>/plant/meteringLocationId}"/></HBox>
+                        </VBox>
+                    </VBox>
+                </VBox>
+
+                <VBox class="appContent" visible="{= ${portal>/role} === 'customer' &amp;&amp; ${portal>/view} === 'customerEnergy' }">
+                    <VBox class="appPageHeader"><Text text="MEINE ENERGIE" class="appEyebrow"/><Title text="Energie heute" titleStyle="H1"/><Text text="Aktuelle Werte meiner Anlage" class="appSubtitle"/></VBox>
+                    <VBox class="appSection">
+                        <FlexBox wrap="Wrap" alignItems="Stretch" class="dashboardKpiRow">
+                            <VBox class="dashboardKpiTile"><Text text="Erzeugung" class="dashboardKpiLabel"/><ObjectNumber number="{dashboard>/generationToday}" unit="kWh" emphasized="true"/></VBox>
+                            <VBox class="dashboardKpiTile"><Text text="Community-Nutzung" class="dashboardKpiLabel"/><ObjectNumber number="{dashboard>/communityUsed}" unit="kWh" emphasized="true"/></VBox>
+                            <VBox class="dashboardKpiTile"><Text text="Überschuss" class="dashboardKpiLabel"/><ObjectNumber number="{dashboard>/surplus}" unit="kWh" emphasized="true"/></VBox>
+                            <VBox class="dashboardKpiTile"><Text text="Nutzungsquote" class="dashboardKpiLabel"/><ObjectNumber number="{dashboard>/usageRate}" unit=" %" emphasized="true"/></VBox>
+                        </FlexBox>
+                    </VBox>
+                </VBox>
+
+                <VBox class="appContent" visible="{= ${portal>/role} === 'customer' &amp;&amp; ${portal>/view} === 'customerBilling' }">
+                    <VBox class="appPageHeader"><Text text="ABRECHNUNG" class="appEyebrow"/><Title text="Meine Erlöse" titleStyle="H1"/><Text text="Zahlungspositionen meiner Anlage" class="appSubtitle"/></VBox>
+                    <VBox class="appSection">
+                        <FlexBox wrap="Wrap" alignItems="Stretch" class="dashboardKpiRow">
+                            <VBox class="dashboardKpiTile"><Text text="Erlös" class="dashboardKpiLabel"/><ObjectNumber number="{dashboard>/revenue}" unit="EUR" emphasized="true"/></VBox>
+                            <VBox class="dashboardKpiTile"><Text text="Arbeitspreis" class="dashboardKpiLabel"/><ObjectNumber number="{customer>/community/fixedPricePerKwh}" unit="EUR/kWh" emphasized="true"/></VBox>
+                            <VBox class="dashboardKpiTile"><Text text="Reststrompreis" class="dashboardKpiLabel"/><ObjectNumber number="{customer>/community/residualPricePerKwh}" unit="EUR/kWh" emphasized="true"/></VBox>
+                        </FlexBox>
+                    </VBox>
+                    <VBox class="appSection">
+                        <Table items="{customer>/billing}" visible="{= (${customer>/billing} || []).length > 0 }">
+                            <columns><Column><Text text="Art"/></Column><Column><Text text="Menge"/></Column><Column><Text text="Satz"/></Column><Column><Text text="Betrag"/></Column><Column><Text text="Zeitraum"/></Column></columns>
+                            <items><ColumnListItem><cells><Text text="{customer>positionType}"/><Text text="{customer>quantityKwh} kWh"/><Text text="{customer>ratePerKwh} EUR/kWh"/><Text text="{customer>amount} EUR"/><Text text="{customer>periodStart} – {customer>periodEnd}"/></cells></ColumnListItem></items>
+                        </Table>
+                        <Text text="Noch keine Zahlungspositionen für diese Anlage vorhanden." class="appSectionSubtitle" visible="{= (${customer>/billing} || []).length === 0 }"/>
                     </VBox>
                 </VBox>
             </VBox>
