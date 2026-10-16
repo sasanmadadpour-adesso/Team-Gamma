@@ -1,4 +1,11 @@
-const plantData = [
+/**
+ * Prototype plant data.
+ *
+ * In a future integration these records would be loaded from the backend/BTP-DB
+ * instead of being hard-coded. New successfully registered plants are persisted
+ * separately through the storage abstraction below.
+ */
+const initialPlantData = [
   {
     name: "PV-Anlage Schule Nord",
     einspeiseMaLo: "DE0073325707820000000000000088943",
@@ -27,6 +34,103 @@ const plantData = [
     standort: "Mülheim an der Ruhr"
   }
 ];
+
+/**
+ * Prototype-only persistence abstraction.
+ *
+ * IMPORTANT: localStorage is used here only as a temporary replacement for the
+ * future BTP-DB/backend persistence. UI and process logic depend on these
+ * generic methods, so the implementation can later be replaced by an API/backend
+ * call without changing the registration flow.
+ */
+const plantStorage = {
+  storageKey: "team-gamma.einspeisung.prototype.plants",
+
+  load() {
+    try {
+      const rawValue = window.localStorage.getItem(this.storageKey);
+      if (!rawValue) {
+        return [];
+      }
+
+      const parsedValue = JSON.parse(rawValue);
+      return Array.isArray(parsedValue) ? parsedValue : [];
+    } catch (error) {
+      console.warn("Persisted plant data could not be loaded.", error);
+      return [];
+    }
+  },
+
+  save(plants) {
+    try {
+      window.localStorage.setItem(this.storageKey, JSON.stringify(plants));
+    } catch (error) {
+      console.warn("Persisted plant data could not be saved.", error);
+    }
+  },
+
+  upsertPlant(plant) {
+    const persistedPlants = this.load();
+    const normalizedPlant = normalizePlant(plant);
+    const existingIndex = persistedPlants.findIndex(
+      (item) => item.einspeiseMaLo === normalizedPlant.einspeiseMaLo
+    );
+
+    if (existingIndex >= 0) {
+      persistedPlants[existingIndex] = normalizedPlant;
+    } else {
+      persistedPlants.push(normalizedPlant);
+    }
+
+    this.save(persistedPlants);
+    return persistedPlants;
+  },
+
+  clear() {
+    try {
+      window.localStorage.removeItem(this.storageKey);
+    } catch (error) {
+      console.warn("Persisted plant data could not be cleared.", error);
+    }
+  }
+};
+
+function normalizePlant(plant) {
+  return {
+    name: plant.name,
+    einspeiseMaLo: plant.einspeiseMaLo,
+    eeArt: plant.eeArt,
+    leistungKw: Number(plant.leistungKw),
+    status: plant.status,
+    statusClass: plant.statusClass,
+    standort: plant.standort
+  };
+}
+
+function upsertPlantInList(plants, plant) {
+  const normalizedPlant = normalizePlant(plant);
+  const existingIndex = plants.findIndex(
+    (item) => item.einspeiseMaLo === normalizedPlant.einspeiseMaLo
+  );
+
+  if (existingIndex >= 0) {
+    plants[existingIndex] = normalizedPlant;
+  } else {
+    plants.push(normalizedPlant);
+  }
+
+  return plants;
+}
+
+function mergePersistedPlants(plants) {
+  const mergedPlants = plants.map(normalizePlant);
+  plantStorage.load().forEach((plant) => {
+    upsertPlantInList(mergedPlants, plant);
+  });
+  return mergedPlants;
+}
+
+let plantData = mergePersistedPlants(initialPlantData);
 
 let draftPlant = null;
 let externalResult = null;
@@ -406,6 +510,26 @@ function startTakeoverSimulation() {
   );
 }
 
+function persistSuccessfulPlantResult() {
+  if (!draftPlant) {
+    return;
+  }
+
+  const successfulPlant = {
+    name: `${draftPlant.eeArt}-Anlage (Demo)`,
+    einspeiseMaLo: draftPlant.einspeiseMaLo,
+    eeArt: draftPlant.eeArt,
+    leistungKw: draftPlant.leistungKw,
+    status: "Bereit zur Zuordnung",
+    statusClass: "registered",
+    standort: "Demo-Datensatz"
+  };
+
+  // Deduplication happens both in the in-memory list and in the storage adapter.
+  upsertPlantInList(plantData, successfulPlant);
+  plantStorage.upsertPlant(successfulPlant);
+}
+
 function populateResultView(isConfirmed) {
   const plantStatus = isConfirmed ? "Bereit zur Zuordnung" : "Abgelehnt";
   const releaseText = isConfirmed ? "Freigabe der Anlage: erfolgt" : "Freigabe der Anlage: nicht erfolgt";
@@ -455,9 +579,14 @@ function populateResultView(isConfirmed) {
 
   if (externalProcessing.explanation) {
     externalProcessing.explanation.textContent = isConfirmed
-      ? "Die Anlage ist angemeldet und kann später der Community zugeordnet werden."
+      ? "Die Anlage ist angemeldet und kann später dem Prozess „Einspeiseanlage zuordnen“ übergeben werden."
       : "Die Anlage ist nicht für die Community-Zuordnung verfügbar.";
     externalProcessing.explanation.className = isConfirmed ? "status-success" : "status-notice";
+  }
+
+  if (isConfirmed) {
+    // Persist only after the positive external result.
+    persistSuccessfulPlantResult();
   }
 }
 
@@ -467,29 +596,6 @@ function processExternalResult(isConfirmed) {
   }
   populateResultView(isConfirmed);
   showView("result");
-}
-
-function addSuccessfulPlantToOverview() {
-  if (!draftPlant || !externalResult || externalResult.plantStatus !== "Bereit zur Zuordnung") {
-    return;
-  }
-
-  const existingPlant = plantData.find((plant) => plant.einspeiseMaLo === draftPlant.einspeiseMaLo);
-  const newPlant = {
-    name: `${draftPlant.eeArt}-Anlage (Demo)`,
-    einspeiseMaLo: draftPlant.einspeiseMaLo,
-    eeArt: draftPlant.eeArt,
-    leistungKw: draftPlant.leistungKw,
-    status: "Bereit zur Zuordnung",
-    statusClass: "registered",
-    standort: "Demo-Datensatz"
-  };
-
-  if (existingPlant) {
-    Object.assign(existingPlant, newPlant);
-  } else {
-    plantData.push(newPlant);
-  }
 }
 
 function mountApp() {
@@ -602,12 +708,13 @@ function mountApp() {
 
   if (returnToOverviewButton) {
     returnToOverviewButton.addEventListener("click", () => {
-      addSuccessfulPlantToOverview();
-      resetForm();
+      // plantData and storage were already updated on a successful result.
+      // This handler only refreshes the view and resets the temporary process state.
       if (plantGrid) {
         plantGrid.innerHTML = plantData.map(renderPlantCard).join("");
       }
       updateSummary();
+      resetForm();
       showView("overview");
     });
   }
