@@ -4,55 +4,157 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Community-App Einspeisung - Anlagenübersicht für Anlagenbetreiber">
-  <title>Community-App Einspeisung - Meine Einspeiseanlagen</title>
+  <title>Community-App Einspeisung - Community Sonnenviertel</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="app-header">
-    <div class="brand">
+    <div class="community-identity">
       <div class="brand-mark" aria-hidden="true">CE</div>
       <div>
         <p class="eyebrow">Community-App Einspeisung</p>
-        <h1>Meine Einspeiseanlagen</h1>
+        <h1 id="communityName">Community Sonnenviertel</h1>
+        <p id="operatorName" class="community-subtitle">Anlagenbetreiber: Max Mustermann</p>
       </div>
     </div>
-    <div class="header-actions">
-      <span class="user-chip">Anlagenbetreiber: Max Mustermann</span>
-    </div>
+    <span id="communityStatus" class="status-badge status-badge--active">Aktiv</span>
   </header>
 
   <main class="page">
     <section id="overviewView" class="view">
+      <section class="context-grid" aria-label="Community-Kontext">
+        <article class="context-card">
+          <h2>Teilnehmer</h2>
+          <p id="participantCount" class="context-value">0</p>
+          <p class="context-label">Teilnehmer</p>
+        </article>
+
+        <article class="context-card">
+          <h2>Netz &amp; Bilanzierung</h2>
+          <dl class="context-details">
+            <div>
+              <dt>Bilanzierungsgebiet</dt>
+              <dd id="bilanzierungsgebietValue">–</dd>
+            </div>
+            <div>
+              <dt>Bilanzkreis</dt>
+              <dd id="bilanzkreisValue">–</dd>
+            </div>
+          </dl>
+        </article>
+
+        <article class="context-card">
+          <h2>Messung</h2>
+          <dl class="context-details">
+            <div>
+              <dt>Messlokation</dt>
+              <dd id="messlokationValue">–</dd>
+            </div>
+            <div>
+              <dt>Messsystem</dt>
+              <dd id="messsystemValue">iMSys</dd>
+            </div>
+            <div>
+              <dt>Messstellenbetreiber</dt>
+              <dd id="msbValue">–</dd>
+            </div>
+          </dl>
+        </article>
+      </section>
+
+      <p class="demo-note context-demo-note">
+        Demodaten für MVP
+      </p>
+
       <section class="page-intro">
         <div>
-          <h2>Übersicht Ihrer registrierten Einspeiseanlagen</h2>
-          <p>Prüfen Sie Status, Leistung und zugehörige Einspeise-Marktlokationen Ihrer Erneuerbare-Energien-Anlagen.</p>
+          <h2>Meine Einspeiseanlage</h2>
+          <p>Prüfen Sie Status, Leistung und zugehörige Einspeise-Marktlokation Ihrer Erneuerbare-Energien-Anlage.</p>
         </div>
         <button id="registerPlantButton" class="primary-action" type="button">
           Neue Anlage anmelden
         </button>
       </section>
 
-      <section class="summary-strip" aria-label="Kurzübersicht">
-        <article class="summary-card">
-          <span class="summary-label">Anlagen gesamt</span>
-          <strong id="plantCount">0</strong>
+      <section class="energy-layout" aria-label="Einspeiseanlage und Tagesverlauf">
+        <article class="plant-info-panel">
+          <div id="plantGrid" class="plant-grid" aria-label="Einspeiseanlagen">
+            <!-- Cards are rendered from plant data in app.js -->
+          </div>
         </article>
-        <article class="summary-card">
-          <span class="summary-label">Gesamtleistung</span>
-          <strong id="totalCapacity">0 kW</strong>
-        </article>
-        <article class="summary-card">
-          <span class="summary-label">Aktive Anlagen</span>
-          <strong id="activePlantCount">0</strong>
-        </article>
-      </section>
 
-      <section id="plantGrid" class="plant-grid" aria-label="Einspeiseanlagen">
-        <!-- Cards are rendered from mock data in app.js -->
+        <article class="chart-panel">
+          <div class="chart-header">
+            <h2>Tagesverlauf</h2>
+            <p class="chart-subtitle">Vergleich von Erzeugung der Anlage und Community-Verbrauch</p>
+          </div>
+          <div id="energyChart" class="energy-chart" role="img" aria-label="Tagesverlauf von Erzeugung und Community-Verbrauch">
+            <!-- SVG chart is rendered from prototype time-series data in app.js -->
+          </div>
+          <p class="demo-note chart-demo-note">Demodaten – später 15-Min.-Messwerte</p>
+
+          <section class="energy-revenue-panel" aria-label="Energie und Erlöse heute">
+            <h3>Energie &amp; Erlöse heute</h3>
+
+            <div class="energy-value-grid">
+              <article class="energy-value-card">
+                <span class="energy-value-label">Erzeugung</span>
+                <strong id="dailyProductionValue">–</strong>
+                <span class="energy-unit">kWh</span>
+              </article>
+              <article class="energy-value-card">
+                <span class="energy-value-label">Community-Nutzung</span>
+                <strong id="dailyCommunityUsageValue">–</strong>
+                <span class="energy-unit">kWh</span>
+              </article>
+              <article class="energy-value-card">
+                <span class="energy-value-label">Überschuss</span>
+                <strong id="dailySurplusValue">–</strong>
+                <span class="energy-unit">kWh</span>
+              </article>
+            </div>
+
+            <p id="dailyCommunityUsagePercent" class="energy-percent">–</p>
+
+            <div class="price-grid">
+              <div class="price-card">
+                <span class="energy-value-label">Community-Vergütung</span>
+                <strong id="communityCompensationValue">–</strong>
+              </div>
+              <div class="price-card">
+                <span class="energy-value-label">Direktvermarktung</span>
+                <strong id="directMarketingPriceValue">–</strong>
+              </div>
+            </div>
+
+            <div class="revenue-list">
+              <div class="revenue-row">
+                <span>Community-Erlös</span>
+                <strong id="communityRevenueValue">–</strong>
+              </div>
+              <div class="revenue-row">
+                <span>Direktvermarktungs-Erlös</span>
+                <strong id="directMarketingRevenueValue">–</strong>
+              </div>
+              <div class="revenue-row revenue-total">
+                <span>Gesamterlös heute</span>
+                <strong id="totalRevenueValue">–</strong>
+              </div>
+            </div>
+
+            <div class="surplus-marketing-row">
+              <div>
+                <span class="energy-value-label">Überschussvermarktung</span>
+                <strong id="surplusMarketingValue">–</strong>
+              </div>
+              <span class="status-badge status-badge--active">Aktiv</span>
+            </div>
+          </section>
+        </article>
       </section>
     </section>
 
+    <!-- Registration, summary, check, takeover, result sections unchanged structurally -->
     <section id="registrationView" class="view" hidden>
       <section class="page-intro">
         <div>
@@ -322,7 +424,7 @@
             </div>
           </dl>
           <p id="resultExplanation" class="status-success">
-            Die Anlage ist angemeldet und kann später der Community zugeordnet werden.
+            Die Anlage ist angemeldet und kann später dem Prozess „Einspeiseanlage zuordnen“ übergeben werden.
           </p>
         </section>
 

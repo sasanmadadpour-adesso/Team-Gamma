@@ -8,6 +8,7 @@
   --sap-muted: #64748b;
   --sap-success: #1e7e34;
   --sap-warning: #b26a00;
+  --sap-danger: #b42318;
   --sap-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
   --radius: 14px;
 }
@@ -28,14 +29,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.5rem;
   padding: 1.25rem 2rem;
   background: #ffffff;
   border-bottom: 1px solid var(--sap-gray-3);
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
 }
 
-.brand {
+.community-identity {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -72,16 +73,40 @@ h2 {
   font-size: 1.25rem;
 }
 
-.user-chip {
+.community-subtitle {
+  margin: 0.35rem 0 0;
+  color: var(--sap-muted);
+  font-size: 0.95rem;
+}
+
+.status-badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 0.85rem;
-  background: var(--sap-gray-1);
-  border: 1px solid var(--sap-gray-2);
+  padding: 0.45rem 0.9rem;
   border-radius: 999px;
-  color: var(--sap-muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 700;
   white-space: nowrap;
+}
+
+.status-badge--active {
+  background: #e7f5ec;
+  color: var(--sap-success);
+}
+
+.status-badge--review {
+  background: #fff4e5;
+  color: var(--sap-warning);
+}
+
+.status-badge--registered {
+  background: #edf2f8;
+  color: var(--sap-blue-dark);
+}
+
+.status-badge--rejected {
+  background: #fde7e9;
+  color: var(--sap-danger);
 }
 
 .page {
@@ -90,12 +115,78 @@ h2 {
   padding: 2rem;
 }
 
+.context-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.context-card {
+  background: #ffffff;
+  border: 1px solid var(--sap-gray-3);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--sap-shadow);
+}
+
+.context-card h2 {
+  font-size: 1rem;
+  color: var(--sap-blue-dark);
+}
+
+.context-value {
+  margin: 0.5rem 0 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.context-label {
+  margin: 0.35rem 0 0;
+  color: var(--sap-muted);
+  font-size: 0.85rem;
+}
+
+.context-details {
+  margin: 0.85rem 0 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.context-details div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.context-details dt {
+  color: var(--sap-muted);
+  font-size: 0.8rem;
+}
+
+.context-details dd {
+  margin: 0;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.demo-note {
+  margin: 1rem 0 0;
+  color: var(--sap-muted);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.context-demo-note {
+  margin-top: 0.25rem;
+}
+
 .page-intro {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin: 1.5rem 0 1rem;
   padding: 1.5rem;
   background: #ffffff;
   border: 1px solid var(--sap-gray-3);
@@ -132,11 +223,32 @@ h2 {
   outline: none;
 }
 
+.secondary-action {
+  appearance: none;
+  border: 1px solid var(--sap-gray-3);
+  cursor: pointer;
+  min-height: 3rem;
+  padding: 0 1.25rem;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--sap-text);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.secondary-action:hover,
+.secondary-action:focus-visible {
+  background: var(--sap-gray-1);
+  border-color: var(--sap-blue);
+  outline: none;
+}
+
 .summary-strip {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin: 1rem 0;
 }
 
 .summary-card {
@@ -159,21 +271,41 @@ h2 {
   line-height: 1;
 }
 
-.plant-grid {
+.energy-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: minmax(280px, 35%) minmax(360px, 65%);
   gap: 1.25rem;
+  align-items: stretch;
 }
 
-.plant-card {
+.plant-info-panel,
+.chart-panel {
   background: #ffffff;
   border: 1px solid var(--sap-gray-3);
   border-radius: var(--radius);
   padding: 1.5rem;
   box-shadow: var(--sap-shadow);
+}
+
+.plant-info-panel h2,
+.chart-panel h2 {
+  margin-bottom: 1rem;
+}
+
+.plant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.plant-card {
+  background: var(--sap-gray-1);
+  border: 1px solid var(--sap-gray-2);
+  border-radius: 12px;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .plant-card-header {
@@ -185,7 +317,7 @@ h2 {
 
 .plant-name {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
 }
 
 .plant-location {
@@ -194,73 +326,10 @@ h2 {
   font-size: 0.9rem;
 }
 
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.status-badge--active {
-  background: #e7f5ec;
-  color: var(--sap-success);
-}
-
-.status-badge--review {
-  background: #fff4e5;
-  color: var(--sap-warning);
-}
-
-.status-badge--registered {
-  background: #edf2f8;
-  color: var(--sap-blue-dark);
-}
-
-.status-badge--rejected {
-  background: #fde7e9;
-  color: #b42318;
-}
-
-.demo-response-panel {
-  margin-top: 1.5rem;
-  padding: 1.25rem;
-  border: 1px dashed #b7c0ce;
-  border-radius: 10px;
-  background: #f8fafc;
-}
-
-.demo-note {
-  margin: 0 0 1rem;
-  color: var(--sap-muted);
-  font-size: 0.9rem;
-}
-
-.processing-section,
-.result-section {
-  padding: 1rem 0;
-}
-
-.processing-section p,
-.result-section p {
-  margin: 0.35rem 0;
-}
-
-.result-heading {
-  margin: 0 0 0.75rem;
-  font-size: 1.2rem;
-}
-
-.result-section .status-badge {
-  margin-bottom: 1rem;
-}
-
 .plant-details {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.85rem;
 }
 
 .detail-label {
@@ -283,25 +352,84 @@ h2 {
   font-size: 0.85rem;
 }
 
-.secondary-action {
-  appearance: none;
-  border: 1px solid var(--sap-gray-3);
-  cursor: pointer;
-  min-height: 3rem;
-  padding: 0 1.25rem;
-  border-radius: 10px;
-  background: #ffffff;
-  color: var(--sap-text);
-  font-size: 1rem;
-  font-weight: 600;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+.chart-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
 }
 
-.secondary-action:hover,
-.secondary-action:focus-visible {
-  background: var(--sap-gray-1);
-  border-color: var(--sap-blue);
-  outline: none;
+.chart-subtitle {
+  margin: 0;
+  color: var(--sap-muted);
+  font-size: 0.9rem;
+}
+
+.energy-chart {
+  width: 100%;
+  min-height: 280px;
+}
+
+.energy-chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.chart-axis-label {
+  fill: var(--sap-muted);
+  font-size: 11px;
+  font-family: "Segoe UI", "Inter", Arial, sans-serif;
+}
+
+.chart-grid {
+  stroke: var(--sap-gray-2);
+  stroke-width: 1;
+}
+
+.chart-series-production {
+  fill: none;
+  stroke: var(--sap-blue);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-series-consumption {
+  fill: none;
+  stroke: var(--sap-warning);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--sap-muted);
+  font-size: 0.85rem;
+}
+
+.chart-legend-swatch {
+  width: 1rem;
+  height: 0.3rem;
+  border-radius: 999px;
+}
+
+.chart-legend-swatch.production {
+  background: var(--sap-blue);
+}
+
+.chart-legend-swatch.consumption {
+  background: var(--sap-warning);
 }
 
 .registration-form {
@@ -419,10 +547,6 @@ h2 {
   word-break: break-word;
 }
 
-.view[hidden] {
-  display: none;
-}
-
 .check-panel-title {
   margin: 0 0 1rem;
   font-size: 1.05rem;
@@ -488,6 +612,22 @@ h2 {
   font-weight: 700;
 }
 
+.status-notice {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: #fff8e6;
+  border: 1px solid #f1d28a;
+  border-radius: 10px;
+  color: #7a5a00;
+  font-weight: 600;
+}
+
+.form-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .role-banner {
   display: inline-flex;
   margin-bottom: 1rem;
@@ -499,28 +639,173 @@ h2 {
   font-weight: 700;
 }
 
-.process-status--pending {
-  background: #fff4e5;
-  color: var(--sap-warning);
-}
-
-.form-actions button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.status-notice {
+.demo-response-panel {
   margin-top: 1.5rem;
-  padding: 1rem 1.25rem;
-  background: #fff8e6;
-  border: 1px solid #f1d28a;
+  padding: 1.25rem;
+  border: 1px dashed #b7c0ce;
   border-radius: 10px;
-  color: #7a5a00;
+  background: #f8fafc;
+}
+
+.demo-note {
+  margin: 0 0 1rem;
+  color: var(--sap-muted);
+  font-size: 0.9rem;
+}
+
+.processing-section,
+.result-section {
+  padding: 1rem 0;
+}
+
+.processing-section p,
+.result-section p {
+  margin: 0.35rem 0;
+}
+
+.result-heading {
+  margin: 0 0 0.75rem;
+  font-size: 1.2rem;
+}
+
+.result-section .status-badge {
+  margin-bottom: 1rem;
+}
+
+.energy-revenue-panel {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--sap-gray-2);
+}
+
+.energy-revenue-panel h3 {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+}
+
+.energy-value-grid,
+.price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.price-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.energy-value-card,
+.price-card {
+  background: var(--sap-gray-1);
+  border: 1px solid var(--sap-gray-2);
+  border-radius: 10px;
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.energy-value-label {
+  color: var(--sap-muted);
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
+.energy-value-card strong {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.energy-unit {
+  color: var(--sap-muted);
+  font-size: 0.8rem;
+}
+
+.energy-percent {
+  margin: 0.85rem 0 0;
+  color: var(--sap-text);
+  font-weight: 600;
+}
+
+.price-card strong {
+  font-size: 1.15rem;
+}
+
+.revenue-list {
+  margin-top: 1rem;
+  border-top: 1px solid var(--sap-gray-2);
+  padding-top: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.revenue-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.revenue-row span {
+  color: var(--sap-muted);
+  font-size: 0.9rem;
+}
+
+.revenue-row strong {
+  font-weight: 700;
+}
+
+.revenue-total {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--sap-gray-2);
+}
+
+.revenue-total span,
+.revenue-total strong {
+  color: var(--sap-text);
+}
+
+.surplus-marketing-row {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem;
+  background: var(--sap-gray-1);
+  border: 1px solid var(--sap-gray-2);
+  border-radius: 10px;
+}
+
+.surplus-marketing-row .energy-value-label {
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.surplus-marketing-row strong {
+  font-size: 1rem;
+}
+
+.view[hidden] {
+  display: none;
+}
+
+@media (max-width: 980px) {
+  .energy-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .context-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 820px) {
+  .energy-value-grid,
+  .price-grid {
+    grid-template-columns: 1fr;
+  }
+
   .app-header {
     flex-direction: column;
     align-items: flex-start;

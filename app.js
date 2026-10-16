@@ -1,9 +1,98 @@
 /**
- * Prototype plant data.
+ * Prototype context data for the dashboard.
  *
- * In a future integration these records would be loaded from the backend/BTP-DB
- * instead of being hard-coded. New successfully registered plants are persisted
- * separately through the storage abstraction below.
+ * These values are intentionally marked as prototype/demo data. They are
+ * centralized here so later integrations can replace them with actual
+ * community, grid, metering, and measurement data without changing rendering.
+ */
+const prototypeContext = {
+  community: {
+    name: "Community Sonnenviertel",
+    status: "Aktiv"
+  },
+  operator: {
+    name: "Max Mustermann"
+  },
+  participation: {
+    count: 24
+  },
+  grid: {
+    // Temporary demo data. Replace later with integrated BTP/S/4 Bilanzierungsgebiet data.
+    bilanzierungsgebiet: "Dortmund Netzgebiet 01",
+    // Temporary demo data. Replace later with integrated Bilanzkreis/EIC data.
+    bilanzkreisId: "11X-DEMO-ENERGY-1"
+  },
+  metering: {
+    // Temporary demo data. Replace later with the actual Messlokation.
+    messlokationId: "DE000562668020000000000000000001",
+    meteringSystem: "iMSys",
+    // Temporary demo data. Replace later with the actual MSB identifier.
+    meteringOperator: "Westnetz GmbH"
+  },
+  dailyEnergy: {
+    // Temporary MVP/demo energy values. Replace with integrated metering/backend values later.
+    productionKwh: 42.8,
+    communityUsageKwh: 31.6,
+    surplusKwh: 11.2
+  },
+  economics: {
+    // Temporary MVP/demo price values. Replace with integrated settlement/market values later.
+    communityCompensationPerKwh: 0.24,
+    directMarketingPricePerKwh: 0.09
+  },
+  energySeries: {
+    // Future intended granularity: 15-minute measurement intervals.
+    production: buildProductionEnergySeries(),
+    communityConsumption: buildCommunityConsumptionEnergySeries()
+  }
+};
+
+function buildProductionEnergySeries() {
+  const series = [];
+
+  for (let index = 0; index <= 96; index += 1) {
+    const hour = index / 4;
+    let value = 0;
+
+    if (hour >= 5.5 && hour <= 18.5) {
+      const normalizedHour = (hour - 5.5) / (18.5 - 5.5);
+      value = Math.sin(normalizedHour * Math.PI) ** 2 * 5.2;
+      value += Math.sin(index * 0.37) * 0.15;
+      if (value < 0) {
+        value = 0;
+      }
+    }
+
+    series.push(Number(value.toFixed(3)));
+  }
+
+  return series;
+}
+
+function buildCommunityConsumptionEnergySeries() {
+  const series = [];
+
+  for (let index = 0; index <= 96; index += 1) {
+    const hour = index / 4;
+    const baseLoad = 1.4;
+    const morningPeak = 2.3 * Math.exp(-Math.pow((hour - 7.5) / 1.7, 2));
+    const middayPeak = 1.0 * Math.exp(-Math.pow((hour - 12.3) / 1.4, 2));
+    const eveningPeak = 3.0 * Math.exp(-Math.pow((hour - 19.2) / 2.1, 2));
+    const variation = Math.cos(index * 0.9) * 0.12;
+    let value = baseLoad + morningPeak + middayPeak + eveningPeak + variation;
+
+    if (value < 0.5) {
+      value = 0.5;
+    }
+
+    series.push(Number(value.toFixed(3)));
+  }
+
+  return series;
+}
+
+/**
+ * Prototype plant data.
  */
 const initialPlantData = [
   {
@@ -11,7 +100,7 @@ const initialPlantData = [
     einspeiseMaLo: "DE0073325707820000000000000088943",
     eeArt: "Solar",
     leistungKw: 6.0,
-    status: "Aktiv",
+    status: "In Betrieb",
     statusClass: "active",
     standort: "Frankfurt am Main"
   },
@@ -37,11 +126,6 @@ const initialPlantData = [
 
 /**
  * Prototype-only persistence abstraction.
- *
- * IMPORTANT: localStorage is used here only as a temporary replacement for the
- * future BTP-DB/backend persistence. UI and process logic depend on these
- * generic methods, so the implementation can later be replaced by an API/backend
- * call without changing the registration flow.
  */
 const plantStorage = {
   storageKey: "team-gamma.einspeisung.prototype.plants",
@@ -214,10 +298,6 @@ function renderPlantCard(plant) {
           <span class="detail-label">Leistung</span>
           <span class="detail-value">${formatKw(plant.leistungKw)}</span>
         </div>
-        <div>
-          <span class="detail-label">Status</span>
-          <span class="detail-value">${plant.status}</span>
-        </div>
       </div>
       <div class="plant-cta">
         Detailansicht und Zuordnung zur Community folgen in späteren Ausbaustufen.
@@ -227,12 +307,26 @@ function renderPlantCard(plant) {
 }
 
 function updateSummary() {
+  const plantCountElement = document.getElementById("plantCount");
+  const totalCapacityElement = document.getElementById("totalCapacity");
+  const activePlantCountElement = document.getElementById("activePlantCount");
+
+  if (!plantCountElement && !totalCapacityElement && !activePlantCountElement) {
+    return;
+  }
+
   const totalCapacity = plantData.reduce((sum, plant) => sum + plant.leistungKw, 0);
   const activePlantCount = plantData.filter((plant) => plant.status === "Aktiv").length;
 
-  document.getElementById("plantCount").textContent = plantData.length;
-  document.getElementById("totalCapacity").textContent = formatKw(totalCapacity);
-  document.getElementById("activePlantCount").textContent = activePlantCount;
+  if (plantCountElement) {
+    plantCountElement.textContent = plantData.length;
+  }
+  if (totalCapacityElement) {
+    totalCapacityElement.textContent = formatKw(totalCapacity);
+  }
+  if (activePlantCountElement) {
+    activePlantCountElement.textContent = activePlantCount;
+  }
 }
 
 function clearCheckTimers() {
@@ -257,6 +351,174 @@ function showView(viewName) {
   if (viewName === "registration" && malooInput) {
     malooInput.focus();
   }
+}
+
+function renderDashboardContext() {
+  const setValue = (id, value) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.textContent = value;
+    }
+  };
+
+  setValue("communityName", prototypeContext.community.name);
+  setValue("communityStatus", prototypeContext.community.status);
+  setValue("operatorName", `Anlagenbetreiber: ${prototypeContext.operator.name}`);
+  setValue("participantCount", prototypeContext.participation.count);
+  setValue("bilanzierungsgebietValue", prototypeContext.grid.bilanzierungsgebiet);
+  setValue("bilanzkreisValue", prototypeContext.grid.bilanzkreisId);
+  setValue("messlokationValue", prototypeContext.metering.messlokationId);
+  setValue("messsystemValue", prototypeContext.metering.meteringSystem);
+  setValue("msbValue", prototypeContext.metering.meteringOperator);
+
+  renderEnergyChart(document.getElementById("energyChart"), prototypeContext.energySeries);
+}
+
+function createSmoothSvgPath(points) {
+  if (points.length === 0) {
+    return "";
+  }
+
+  if (points.length === 1) {
+    return `M ${points[0].x} ${points[0].y}`;
+  }
+
+  let path = `M ${points[0].x} ${points[0].y}`;
+
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const previousPoint = points[Math.max(0, index - 1)];
+    const currentPoint = points[index];
+    const nextPoint = points[index + 1];
+    const followingPoint = points[Math.min(points.length - 1, index + 2)];
+
+    const controlPoint1X = currentPoint.x + (nextPoint.x - previousPoint.x) / 6;
+    const controlPoint1Y = currentPoint.y + (nextPoint.y - previousPoint.y) / 6;
+    const controlPoint2X = nextPoint.x - (followingPoint.x - currentPoint.x) / 6;
+    const controlPoint2Y = nextPoint.y - (followingPoint.y - currentPoint.y) / 6;
+
+    path += ` C ${controlPoint1X} ${controlPoint1Y}, ${controlPoint2X} ${controlPoint2Y}, ${nextPoint.x} ${nextPoint.y}`;
+  }
+
+  return path;
+}
+
+function renderEnergyChart(container, energySeries) {
+  if (!container || !energySeries) {
+    return;
+  }
+
+  const width = 640;
+  const height = 300;
+  const padding = { top: 16, right: 14, bottom: 34, left: 44 };
+  const innerWidth = width - padding.left - padding.right;
+  const innerHeight = height - padding.top - padding.bottom;
+  const pointCount = energySeries.production.length;
+  const allValues = [...energySeries.production, ...energySeries.communityConsumption];
+  const maxValue = Math.max(...allValues, 1);
+  const roundedMax = Math.ceil(maxValue * 1.15);
+
+  const xForIndex = (index) => padding.left + (index / (pointCount - 1)) * innerWidth;
+  const yForValue = (value) => padding.top + innerHeight - (value / roundedMax) * innerHeight;
+
+  const productionPoints = energySeries.production.map((value, index) => ({
+    x: xForIndex(index),
+    y: yForValue(value)
+  }));
+  const consumptionPoints = energySeries.communityConsumption.map((value, index) => ({
+    x: xForIndex(index),
+    y: yForValue(value)
+  }));
+
+  const productionPath = createSmoothSvgPath(productionPoints);
+  const consumptionPath = createSmoothSvgPath(consumptionPoints);
+
+  const yTicks = [];
+  for (let value = 0; value <= roundedMax; value += Math.max(1, Math.round(roundedMax / 4))) {
+    if (value > roundedMax) {
+      break;
+    }
+    yTicks.push(value);
+  }
+  if (!yTicks.includes(roundedMax)) {
+    yTicks.push(roundedMax);
+  }
+
+  const xLabels = [
+    { index: 0, label: "00:00" },
+    { index: 24, label: "06:00" },
+    { index: 48, label: "12:00" },
+    { index: 72, label: "18:00" },
+    { index: 96, label: "24:00" }
+  ];
+
+  container.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Tagesverlauf von Erzeugung und Community-Verbrauch" preserveAspectRatio="xMidYMid meet">
+      ${yTicks.map((value) => `
+        <line class="chart-grid" x1="${padding.left}" y1="${yForValue(value)}" x2="${width - padding.right}" y2="${yForValue(value)}"></line>
+        <text class="chart-axis-label" x="${padding.left - 8}" y="${yForValue(value) + 4}" text-anchor="end">${value}</text>
+      `).join("")}
+      <line class="chart-grid" x1="${padding.left}" y1="${padding.top + innerHeight}" x2="${width - padding.right}" y2="${padding.top + innerHeight}"></line>
+      ${xLabels.map((label) => `
+        <text class="chart-axis-label" x="${xForIndex(label.index)}" y="${height - 10}" text-anchor="middle">${label.label}</text>
+      `).join("")}
+      <text class="chart-axis-label" x="8" y="${padding.top + innerHeight / 2}" text-anchor="middle" transform="rotate(-90 8 ${padding.top + innerHeight / 2})">kWh</text>
+      <path class="chart-series-production" d="${productionPath}"></path>
+      <path class="chart-series-consumption" d="${consumptionPath}"></path>
+    </svg>
+    <div class="chart-legend">
+      <span class="chart-legend-item">
+        <span class="chart-legend-swatch production"></span>
+        Erzeugung der Anlage
+      </span>
+      <span class="chart-legend-item">
+        <span class="chart-legend-swatch consumption"></span>
+        Community-Verbrauch
+      </span>
+    </div>
+  `;
+}
+
+function formatKwh(value) {
+  return value.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
+function formatEuroPerKwh(value) {
+  return `${value.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €/kWh`;
+}
+
+function formatEuro(value) {
+  return `${value.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+}
+
+function renderEnergyEarnings(context) {
+  const dailyEnergy = context.dailyEnergy;
+  const economics = context.economics;
+
+  const communityUsagePercent = (dailyEnergy.communityUsageKwh / dailyEnergy.productionKwh) * 100;
+  const communityRevenue = dailyEnergy.communityUsageKwh * economics.communityCompensationPerKwh;
+  const directMarketingRevenue = dailyEnergy.surplusKwh * economics.directMarketingPricePerKwh;
+  const totalRevenue = communityRevenue + directMarketingRevenue;
+
+  const setValue = (id, value) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.textContent = value;
+    }
+  };
+
+  setValue("dailyProductionValue", formatKwh(dailyEnergy.productionKwh));
+  setValue("dailyCommunityUsageValue", formatKwh(dailyEnergy.communityUsageKwh));
+  setValue("dailySurplusValue", formatKwh(dailyEnergy.surplusKwh));
+  setValue(
+    "dailyCommunityUsagePercent",
+    `${communityUsagePercent.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} % der Erzeugung in der Community genutzt`
+  );
+  setValue("communityCompensationValue", formatEuroPerKwh(economics.communityCompensationPerKwh));
+  setValue("directMarketingPriceValue", formatEuroPerKwh(economics.directMarketingPricePerKwh));
+  setValue("communityRevenueValue", formatEuro(communityRevenue));
+  setValue("directMarketingRevenueValue", formatEuro(directMarketingRevenue));
+  setValue("totalRevenueValue", formatEuro(totalRevenue));
+  setValue("surplusMarketingValue", `${formatKwh(dailyEnergy.surplusKwh)} kWh → Direktvermarktung`);
 }
 
 function clearErrors() {
@@ -525,7 +787,6 @@ function persistSuccessfulPlantResult() {
     standort: "Demo-Datensatz"
   };
 
-  // Deduplication happens both in the in-memory list and in the storage adapter.
   upsertPlantInList(plantData, successfulPlant);
   plantStorage.upsertPlant(successfulPlant);
 }
@@ -585,7 +846,6 @@ function populateResultView(isConfirmed) {
   }
 
   if (isConfirmed) {
-    // Persist only after the positive external result.
     persistSuccessfulPlantResult();
   }
 }
@@ -616,6 +876,8 @@ function mountApp() {
   }
 
   updateSummary();
+  renderDashboardContext();
+  renderEnergyEarnings(prototypeContext);
   showView("overview");
 
   if (registerButton) {
@@ -708,12 +970,12 @@ function mountApp() {
 
   if (returnToOverviewButton) {
     returnToOverviewButton.addEventListener("click", () => {
-      // plantData and storage were already updated on a successful result.
-      // This handler only refreshes the view and resets the temporary process state.
       if (plantGrid) {
         plantGrid.innerHTML = plantData.map(renderPlantCard).join("");
       }
       updateSummary();
+      renderDashboardContext();
+      renderEnergyEarnings(prototypeContext);
       resetForm();
       showView("overview");
     });
