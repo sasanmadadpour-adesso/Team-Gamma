@@ -1,0 +1,2 @@
+ID,name,status,operatorName,participantCount,bilanzierungsgebietId,bilanzkreisId,messlokationId,meteringSystem,meteringOperator
+11111111-1111-1111-1111-111111111111,Community Sonnenviertel,Aktiv,Max Mustermann,24,Dortmund Netzgebiet 01,11X-DEMO-ENERGY-1,DE000562668020000000000000000001,iMSys,Westnetz GmbH

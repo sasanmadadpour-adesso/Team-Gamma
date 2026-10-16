@@ -1,0 +1,100 @@
+{
+  "_version": "1.60.0",
+  "sap.app": {
+    "id": "communityapp.einspeisung",
+    "type": "application",
+    "title": "Community-App Einspeisung",
+    "description": "SAP Fiori Elements foundation for the Community-App Einspeisung",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/communityapp/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.uxap": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "models": {
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "async": true
+      },
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "EnergyPlantsList",
+          "target": "EnergyPlantsList"
+        },
+        {
+          "pattern": "EnergyPlants({key}):?query:",
+          "name": "EnergyPlantsObjectPage",
+          "target": "EnergyPlantsObjectPage"
+        }
+      ],
+      "targets": {
+        "EnergyPlantsList": {
+          "type": "Component",
+          "id": "EnergyPlantsList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/EnergyPlants",
+              "variantManagement": "Page",
+              "navigation": {
+                "EnergyPlants": {
+                  "detail": {
+                    "route": "EnergyPlantsObjectPage"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "EnergyPlantsObjectPage": {
+          "type": "Component",
+          "id": "EnergyPlantsObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/EnergyPlants"
+            }
+          }
+        }
+      }
+    }
+  }
+}

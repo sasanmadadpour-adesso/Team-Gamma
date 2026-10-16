@@ -66,6 +66,30 @@ The user should understand at a glance:
 
 
 
+## Mandatory Technology Stack
+
+The prescribed technology stack for this implementation is:
+
+- SAP CAP (Cloud Application Programming Model)
+- SAP BTP
+- SAP Fiori
+- SAP Fiori Elements
+
+The existing HTML/CSS/JavaScript implementation remains a functional and visual
+reference/prototype only. It must NOT be described or used as the final target
+architecture.
+
+Target architecture:
+
+- SAP Fiori Elements
+  -> CAP OData service
+  -> SAP CAP domain/service layer
+  -> BTP-ready persistence/integration architecture
+
+External integrations may remain mocked/demo boundaries.
+No real SAP BTP deployment and no real S/4HANA, VNB, MSB, Lumenaza or BKV
+connectivity are required for this MVP.
+
 # 2. Existing System Context
 
 
@@ -2694,9 +2718,10 @@ Modify the existing implementation incrementally.
 
 
 
-Prefer the existing HTML/CSS/JavaScript architecture unless the repository
+Use the prescribed SAP Fiori Elements -> CAP OData service -> SAP CAP -> BTP-ready architecture as the target.
 
-already establishes another approach.
+The existing HTML/CSS/JavaScript implementation remains only the functional and
+visual reference.
 
 
 
