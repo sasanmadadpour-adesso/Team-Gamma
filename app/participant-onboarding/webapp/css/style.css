@@ -1,0 +1,199 @@
+:root {
+    --neo-accent: #08796d;
+    --neo-accent-strong: #075f57;
+    --neo-accent-soft: #e7f3ef;
+    --neo-ink: #183632;
+    --neo-muted: #4b6661;
+    --neo-line: #d5e3de;
+    --neo-surface: #ffffff;
+    --neo-canvas: #f4f7f4;
+    --neo-warning: #8a5700;
+}
+
+.onboardingPage,
+.onboardingPage .sapMPageBgStandard,
+.onboardingPage .sapMPageEnableScrolling { background: var(--neo-canvas); }
+
+.onboardingShell {
+    width: min(100%, 72rem);
+    margin: 0 auto;
+    padding: 1.25rem 2rem 4rem;
+    color: var(--neo-ink);
+    box-sizing: border-box;
+}
+
+.brandBar {
+    min-height: 4rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--neo-line);
+}
+
+.brandLockup { gap: .75rem; }
+.brandIcon {
+    color: white;
+    background: var(--neo-accent);
+    border-radius: .75rem;
+    padding: .65rem;
+}
+.brandName.sapMTitle { font-size: 1.05rem; color: var(--neo-ink); line-height: 1.15; }
+.brandSubline { color: var(--neo-muted); font-size: .8rem; }
+.safeBadge { background: var(--neo-accent-soft); padding: .45rem .75rem; border-radius: 999px; }
+
+.heroBlock { padding: 2.6rem 0 2rem; gap: .9rem; max-width: 54rem; }
+.heroBlock .sapMTitle {
+    color: var(--neo-ink);
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    line-height: 1.13;
+    letter-spacing: -.035em;
+    max-width: 100%;
+}
+.heroIntro, .stepHint {
+    color: var(--neo-muted);
+    max-width: 68ch;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.statusStrip { margin-bottom: 1rem; border-radius: .75rem; }
+
+.onboardingWizard { background: transparent; min-height: 30rem; }
+.onboardingWizard .sapMWizardProgressNav {
+    background: var(--neo-surface);
+    border-radius: .875rem;
+    border: 1px solid var(--neo-line);
+    margin-bottom: 1.25rem;
+}
+.onboardingWizard .sapMWizardProgressNavStepActivated::after,
+.onboardingWizard .sapMWizardProgressNavStepCircle { border-color: var(--neo-accent); }
+.onboardingWizard .sapMWizardProgressNavStepActivated .sapMWizardProgressNavStepCircle,
+.onboardingWizard .sapMWizardProgressNavStepActive .sapMWizardProgressNavStepCircle { background: var(--neo-accent); color: #fff; }
+.onboardingWizard .sapMWizardStep { padding: 0; }
+.onboardingWizard .sapMWizardStepContainer { padding-bottom: 0; }
+
+.stepContent { gap: 1.25rem; padding: 1.25rem 0 .5rem; max-width: 58rem; }
+.stepHeading { gap: .4rem; padding: .75rem .25rem .25rem; }
+.stepHeading .sapMTitle { color: var(--neo-ink); font-size: clamp(1.55rem, 3vw, 2.05rem); letter-spacing: -.02em; }
+
+.formCard,
+.summaryCard,
+.statusCard,
+.contextBar {
+    background: var(--neo-surface);
+    border-radius: .875rem;
+    padding: 1.5rem;
+    border: 1px solid var(--neo-line);
+}
+.formCard { gap: .9rem; }
+.formCardPrimary { border-color: #b9d8ce; }
+.formCard .sapMTitle, .summaryCard .sapMTitle { color: var(--neo-ink); }
+.formCard .sapMLabel { color: var(--neo-ink); font-weight: 700; }
+.sectionNote, .fieldHelp { color: var(--neo-muted); line-height: 1.5; font-size: .875rem; }
+.helpLink { margin-top: .35rem; }
+
+.contextBar { padding: 1rem 1.25rem; }
+.contextBar > .sapMFlexItem:first-child { gap: .75rem; }
+.contextBar .sapUiIcon { color: var(--neo-accent); font-size: 1.3rem; }
+.contextLabel, .summaryLabel { color: var(--neo-muted); font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.communitySelect { margin: .25rem 0 .75rem; }
+.calculatorRow { gap: .8rem; padding: .6rem 0 .25rem; border-top: 1px solid var(--neo-line); }
+.calculatorResult { max-width: 44rem; color: var(--neo-accent-strong); font-weight: 600; line-height: 1.45; }
+
+.verificationCard { background: #eef8f5; }
+.cardTitleRow { gap: .85rem; }
+.cardTitleRow .sapUiIcon { color: var(--neo-accent); font-size: 1.35rem; }
+.verificationFlow, .lookupRow, .actionGroup, .documentLinks { gap: .65rem; }
+.statusCard { gap: 1rem; }
+.statusCardIcon { color: var(--neo-accent); font-size: 1.65rem; }
+
+.contractSection { gap: 1rem; }
+.sectionNumberRow { gap: .75rem; }
+.sectionNumber { background: var(--neo-accent-soft); color: var(--neo-accent-strong); font-weight: 800; padding: .3rem .55rem; border-radius: .4rem; font-size: .78rem; }
+.consentBox, .mandateBox { padding: 1rem; border-radius: .75rem; background: #f3f7f6; gap: .6rem; }
+.mandateBox { margin-top: .75rem; }
+.mandateBox > .sapMFlexItem:first-child { gap: .65rem; }
+.mandateBox .sapUiIcon { color: var(--neo-accent); font-size: 1.25rem; }
+.mandateText { color: #3f5956; line-height: 1.55; }
+
+.summaryCard { gap: 0; padding: 0; overflow: hidden; }
+.summarySection { gap: 1rem; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neo-line); }
+.summarySection:last-child { border-bottom: 0; }
+.summarySection > .sapMFlexItem:first-child { color: var(--neo-accent); font-size: 1.35rem; width: 2rem; text-align: center; }
+.summarySection > .sapMFlexItem:last-child { gap: .22rem; }
+.signatureCard { background: #edf7f4; }
+.signaturePad {
+    position: relative;
+    width: 100%;
+    height: 12rem;
+    overflow: hidden;
+    border: 1px solid var(--neo-line);
+    border-radius: .75rem;
+    background: var(--neo-surface);
+}
+.signaturePad canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+.signaturePadHint { position: absolute; left: 1rem; bottom: .75rem; color: var(--neo-muted); font-size: .8rem; pointer-events: none; }
+.signatureActions { gap: .75rem; justify-content: flex-end; }
+.addressCheck { margin-top: .75rem; }
+
+.submissionSuccess {
+    max-width: 42rem;
+    min-height: 31rem;
+    margin: 3.5rem auto 0;
+    padding: 4rem 2rem;
+    box-sizing: border-box;
+    gap: 1.25rem;
+    text-align: center;
+}
+.submissionSuccessIcon {
+    color: var(--neo-accent);
+    background: var(--neo-accent-soft);
+    border-radius: 50%;
+    padding: 1.35rem;
+    font-size: 3.25rem;
+}
+.submissionSuccess .sapMTitle { color: var(--neo-ink); }
+.submissionSuccess > .sapMFlexItem:nth-child(2) .sapMTitle { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.035em; }
+.submissionSuccessText { max-width: 38rem; color: var(--neo-muted); font-size: 1.1rem; line-height: 1.6; }
+.submissionStatus { padding: .55rem .9rem; border-radius: 999px; background: var(--neo-accent-soft); }
+.submissionReference { min-width: min(100%, 22rem); margin-top: .5rem; padding: 1.25rem 1.5rem; border: 1px solid var(--neo-line); border-radius: .875rem; background: var(--neo-surface); gap: .35rem; }
+.submissionSuccessNote { max-width: 34rem; color: var(--neo-muted); line-height: 1.5; }
+
+.stepActions {
+    padding: 1.25rem 0 .5rem;
+    min-height: 3rem;
+    gap: .75rem;
+}
+.stepActions .sapMBtnInner { min-height: 2.75rem; padding-inline: 1rem; }
+.onboardingShell .sapMBtnEmphasized { background: var(--neo-accent); border-color: var(--neo-accent); }
+.onboardingShell .sapMBtnEmphasized:hover { background: var(--neo-accent-strong); border-color: var(--neo-accent-strong); }
+.onboardingShell .sapMInputBaseContentWrapper,
+.onboardingShell .sapMSlt { border-radius: .5rem; }
+.onboardingShell .sapMInputBaseContentWrapper:hover,
+.onboardingShell .sapMSlt:hover { border-color: var(--neo-accent); }
+.onboardingShell .sapMInputBaseError .sapMInputBaseContentWrapper { border-color: #b42318; }
+.onboardingShell .sapMInputBase:focus-within,
+.onboardingShell .sapMSlt:focus-within,
+.onboardingShell .sapMBtn:focus-within { outline: 3px solid rgba(8, 127, 114, .28); outline-offset: 2px; }
+
+@media (max-width: 700px) {
+    .onboardingShell { padding: .75rem .75rem 2rem; }
+    .brandBar { min-height: 3.25rem; }
+    .safeBadge .sapMObjStatusText { display: none; }
+    .heroBlock { padding: 2rem .25rem 1.5rem; }
+    .heroBlock .sapMTitle { font-size: 2rem; }
+    .onboardingWizard .sapMWizardProgressNavStepTitle { display: none; }
+    .onboardingWizard .sapMWizardProgressNav { padding-inline: .2rem; }
+    .formCard, .summaryCard, .statusCard, .contextBar { padding: 1.1rem; }
+    .summaryCard { padding: 0; }
+    .stepActions { flex-wrap: wrap; }
+    .stepActions > .sapMFlexItem, .actionGroup, .actionGroup > .sapMFlexItem { width: 100%; }
+    .stepActions .sapMBtn, .actionGroup .sapMBtn { width: 100%; }
+    .verificationFlow > .sapMFlexItem { width: 100%; }
+    .verificationFlow .sapMBtn, .verificationFlow .sapMInputBase { width: 100% !important; }
+    .calculatorRow > .sapMFlexItem { width: 100%; }
+    .calculatorRow .sapMBtn { width: 100%; }
+    .submissionSuccess { margin-top: 1.5rem; padding: 3rem .75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}

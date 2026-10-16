@@ -1,6 +1,185 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:macros="sap.fe.macros"
-    xmlns:html="http://www.w3.org/1999/xhtml" controllerName="neo.energy.participantonboarding.ext.view.Main">
-    <Page id="Main" title="{i18n>MainTitle}">
-        <content></content>
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form" xmlns:custom="neo.energy.participantonboarding.ext.control" controllerName="neo.energy.participantonboarding.ext.view.Main">
+    <Page id="Main" title="{i18n>appTitle}" class="onboardingPage" showHeader="false">
+        <content>
+            <VBox class="onboardingShell" busy="{state>/busy}" busyIndicatorDelay="0">
+                <HBox class="brandBar" alignItems="Center" justifyContent="SpaceBetween">
+                    <HBox class="brandLockup" alignItems="Center">
+                        <core:Icon src="sap-icon://energy-saving-lightbulb" size="1.25rem" decorative="false" alt="Neo Utility" class="brandIcon"/>
+                        <VBox><Title text="Neo Utility" level="H2" class="brandName"/><Text text="Energy Sharing" class="brandSubline"/></VBox>
+                    </HBox>
+                    <ObjectStatus text="Sichere Umgebung" state="Information" icon="sap-icon://shield" class="safeBadge"/>
+                </HBox>
+
+                <VBox class="heroBlock" visible="{= !${state>/submitted} &amp;&amp; ${form>/status} !== 'IN_REVIEW'}">
+                    <Title text="Ihr Weg in die Energiegemeinschaft" level="H1" wrapping="true"/>
+                    <Text text="Wir führen Sie Schritt für Schritt durch Ihren Antrag. Jeder abgeschlossene Schritt wird gespeichert und kann später fortgesetzt werden." class="heroIntro"/>
+                </VBox>
+
+                <MessageStrip text="{state>/message}" visible="{= !!${state>/message} &amp;&amp; !${state>/submitted} &amp;&amp; ${form>/status} !== 'IN_REVIEW'}" type="{state>/messageType}" showIcon="true" showCloseButton="true" close=".onDismissMessage" class="statusStrip"/>
+
+                <Wizard id="onboardingWizard" visible="{= !${state>/submitted} &amp;&amp; ${form>/status} !== 'IN_REVIEW'}" showNextButton="false" renderMode="Page" class="onboardingWizard" stepActivate=".onStepActivate">
+                    <WizardStep id="stepPrerequisites" title="Voraussetzungen" icon="sap-icon://complete" validated="{state>/validated/0}">
+                        <VBox class="stepContent">
+                            <VBox class="stepHeading">
+                                <Title text="Passt Energy Sharing zu Ihnen?" level="H2"/>
+                                <Text text="Zuerst prüfen wir die wichtigsten Teilnahmebedingungen – noch ohne persönliche Daten." class="stepHint"/>
+                            </VBox>
+                            <VBox class="formCard formCardPrimary">
+                                <Title text="Kurzer Voraussetzungencheck" level="H3"/>
+                                <Text text="Alle Felder mit * sind erforderlich." class="sectionNote"/>
+                                <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="1" emptySpanL="1" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false">
+                                    <Label text="PLZ der Verbrauchsstelle" required="true" labelFor="prerequisitePostalCode"/>
+                                    <Input id="prerequisitePostalCode" value="{form>/postalCode}" placeholder="z. B. 44139" maxLength="5" type="Text" valueState="{state>/fieldStates/postalCode}" valueStateText="{state>/fieldMessages/postalCode}"/>
+                                    <Label text="Ist ein intelligentes Messsystem (iMSys) installiert?" required="true"/>
+                                    <VBox><RadioButtonGroup selectedIndex="{state>/imsysIndex}" select=".onImsysChange" columns="1"><buttons><RadioButton text="Ja, ein geeignetes iMSys ist vorhanden"/><RadioButton text="Nein, noch nicht"/></buttons></RadioButtonGroup><Link text="Was ist ein iMSys?" press=".onInfoImsys" class="helpLink"/></VBox>
+                                    <Label text="Besteht bereits ein Stromliefervertrag?" required="true"/>
+                                    <VBox><RadioButtonGroup selectedIndex="{state>/contractIndex}" select=".onContractChange" columns="1"><buttons><RadioButton text="Ja, es besteht bereits ein Vertrag"/><RadioButton text="Nein, es besteht kein Vertrag"/></buttons></RadioButtonGroup><Text text="Bei „Ja“ benötigen wir erst in der Vertragsphase einen ausdrücklichen Kündigungsauftrag." class="fieldHelp"/></VBox>
+                                </form:SimpleForm>
+                            </VBox>
+                            <HBox class="stepActions" justifyContent="SpaceBetween" alignItems="Center"><Button text="So funktioniert die Beispielrechnung" icon="sap-icon://simulate" type="Transparent" press=".onOpenCalculator"/><Button text="Weiter zur Gemeinschaft" icon="sap-icon://navigation-right-arrow" iconFirst="false" type="Emphasized" press=".onNext"/></HBox>
+                        </VBox>
+                    </WizardStep>
+
+                    <WizardStep id="stepCommunity" title="Gemeinschaft" icon="sap-icon://collaborate" validated="{state>/validated/1}">
+                        <VBox class="stepContent">
+                            <VBox class="stepHeading"><Title text="Wählen Sie Ihre Gemeinschaft" level="H2"/><Text text="Wir zeigen vorhandene Angebote zur PLZ Ihrer Verbrauchsstelle. Die endgültige Zulässigkeit wird später geprüft." class="stepHint"/></VBox>
+                            <HBox class="contextBar" alignItems="Center" justifyContent="SpaceBetween"><HBox alignItems="Center"><core:Icon src="sap-icon://map-2"/><VBox><Text text="Vorausgewählte Region" class="contextLabel"/><Title text="{= 'PLZ ' + ${form>/postalCode}}" level="H4"/></VBox></HBox><Button text="PLZ ändern" type="Transparent" press=".onBack"/></HBox>
+                            <VBox class="formCard formCardPrimary">
+                                <Label text="Verfügbare Gemeinschaft" required="true" labelFor="communitySelect"/>
+                                <Select id="communitySelect" selectedKey="{form>/community_ID}" forceSelection="false" valueState="{state>/fieldStates/community_ID}" valueStateText="{state>/fieldMessages/community_ID}" width="100%" items="{service>/Communities}" change=".onCommunityChange" class="communitySelect"><core:Item key="{service>ID}" text="{parts:[{path:'service>name'},{path:'service>location'},{path:'service>fixedPricePerKwh'}], formatter: '.formatCommunityOption'}"/></Select>
+                                <MessageStrip text="Die Auswahl ist noch keine Vertragszustimmung und keine Teilnahmezusage." type="Information" showIcon="true"/>
+                            </VBox>
+                            <HBox class="stepActions" justifyContent="SpaceBetween" alignItems="Center"><Button text="Zurück" icon="sap-icon://navigation-left-arrow" press=".onBack"/><Button text="Weiter zu persönlichen Daten" icon="sap-icon://navigation-right-arrow" iconFirst="false" type="Emphasized" press=".onNext"/></HBox>
+                        </VBox>
+                    </WizardStep>
+
+                    <WizardStep id="stepPersonal" title="Persönliche Daten" icon="sap-icon://person-placeholder" validated="{state>/validated/2}">
+                        <VBox class="stepContent">
+                            <VBox class="stepHeading"><Title text="Persönliche Daten und Kontakt" level="H2"/><Text text="Diese Angaben benötigen wir für die Antragserstellung. Die E-Mail-Bestätigung ist Teil dieses Schritts." class="stepHint"/></VBox>
+                            <VBox class="formCard formCardPrimary">
+                                <Title text="Person oder Unternehmen" level="H3"/>
+                                <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="1" emptySpanL="1" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1">
+                                    <Label text="Teilnahme als" required="true" labelFor="customerType"/><Select id="customerType" selectedKey="{form>/customerType}" width="100%"><core:Item key="PRIVATE" text="Privatperson"/><core:Item key="BUSINESS" text="Unternehmen"/></Select>
+                                    <Label text="Vorname" required="{= ${form>/customerType} === 'PRIVATE'}" labelFor="firstName"/><Input id="firstName" value="{form>/firstName}" placeholder="Max"/>
+                                    <Label text="Nachname" required="{= ${form>/customerType} === 'PRIVATE'}" labelFor="lastName"/><Input id="lastName" value="{form>/lastName}" placeholder="Mustermann"/>
+                                    <Label text="Unternehmen" required="{= ${form>/customerType} === 'BUSINESS'}" visible="{= ${form>/customerType} === 'BUSINESS'}" labelFor="companyName"/><Input id="companyName" value="{form>/companyName}" placeholder="Muster Energie GmbH" visible="{= ${form>/customerType} === 'BUSINESS'}"/>
+                                    <Label text="Rechtsform" visible="{= ${form>/customerType} === 'BUSINESS'}" labelFor="legalForm"/><Input id="legalForm" value="{form>/legalForm}" placeholder="z. B. GmbH" visible="{= ${form>/customerType} === 'BUSINESS'}"/>
+                                    <Label text="Vertretungsberechtigte Person" visible="{= ${form>/customerType} === 'BUSINESS'}" labelFor="representativeName"/><Input id="representativeName" value="{form>/representativeName}" visible="{= ${form>/customerType} === 'BUSINESS'}"/>
+                                    <Label text="E-Mail-Adresse" required="true" labelFor="email"/><Input id="email" value="{form>/email}" placeholder="max.mustermann@example.com" type="Email" change=".onEmailChange" valueState="{state>/fieldStates/email}" valueStateText="{state>/fieldMessages/email}"/>
+                                    <Label text="Telefonnummer (optional)" labelFor="phone"/><Input id="phone" value="{form>/phone}" placeholder="+49 170 1234567" type="Tel"/>
+                                </form:SimpleForm>
+                            </VBox>
+                            <VBox class="formCard">
+                                <Title text="Kontakt- und Verbrauchsadresse" level="H3"/>
+                                <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="1" emptySpanL="1" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1">
+                                    <Label text="Straße" required="true" labelFor="street"/><Input id="street" value="{form>/street}" placeholder="Musterstraße"/>
+                                    <Label text="Hausnummer" required="true" labelFor="houseNumber"/><Input id="houseNumber" value="{form>/houseNumber}" placeholder="12a"/>
+                                    <Label text="PLZ" required="true" labelFor="contactPostalCode"/><Input id="contactPostalCode" value="{form>/postalCode}" placeholder="44139" maxLength="5" type="Text" valueState="{state>/fieldStates/postalCode}" valueStateText="{state>/fieldMessages/postalCode}"/>
+                                    <Label text="Ort" required="true" labelFor="city"/><Input id="city" value="{form>/city}" placeholder="Dortmund"/>
+                                </form:SimpleForm>
+                                <CheckBox text="Meine Verbrauchsstelle befindet sich an dieser Adresse" selected="{= !${form>/consumptionAddressDifferent}}" select=".onAddressToggle" class="addressCheck"/>
+                            </VBox>
+                            <VBox class="formCard" visible="{form>/consumptionAddressDifferent}">
+                                <Title text="Abweichende Verbrauchsadresse" level="H3"/>
+                                <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="1" emptySpanL="1" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1">
+                                    <Label text="Straße" required="true" labelFor="consumptionStreet"/><Input id="consumptionStreet" value="{form>/consumptionStreet}"/>
+                                    <Label text="Hausnummer" required="true" labelFor="consumptionHouseNumber"/><Input id="consumptionHouseNumber" value="{form>/consumptionHouseNumber}"/>
+                                    <Label text="PLZ" required="true" labelFor="consumptionPostalCode"/><Input id="consumptionPostalCode" value="{form>/consumptionPostalCode}" maxLength="5" type="Text"/>
+                                    <Label text="Ort" required="true" labelFor="consumptionCity"/><Input id="consumptionCity" value="{form>/consumptionCity}"/>
+                                </form:SimpleForm>
+                            </VBox>
+                            <VBox class="formCard verificationCard">
+                                <HBox class="cardTitleRow" alignItems="Center" justifyContent="SpaceBetween"><VBox><Title text="E-Mail bestätigen" level="H3"/><Text text="Simulierter Versand – es wird kein Benutzerkonto angelegt." class="sectionNote"/></VBox><ObjectStatus text="{= ${form>/emailVerified} ? 'Bestätigt' : 'Noch offen'}" state="{= ${form>/emailVerified} ? 'Success' : 'Warning'}" icon="{= ${form>/emailVerified} ? 'sap-icon://accept' : 'sap-icon://email'}"/></HBox>
+                                <HBox class="verificationFlow" alignItems="Center" wrap="Wrap"><Button text="Code senden" icon="sap-icon://email" press=".onSendCode" enabled="{= !!${form>/email} &amp;&amp; !${form>/emailVerified}}"/><Input valueLiveUpdate="true" value="{state>/verificationCode}" placeholder="6-stelliger Code" maxLength="6" type="Tel" width="11rem" enabled="{= !${form>/emailVerified}}"/><Button text="Code bestätigen" type="Emphasized" press=".onVerifyCode" enabled="{= !!${state>/verificationCode} &amp;&amp; !${form>/emailVerified}}"/></HBox>
+                                <Text text="{state>/verificationHint}" class="fieldHelp"/>
+                            </VBox>
+                            <HBox class="stepActions" justifyContent="SpaceBetween"><Button text="Zurück" icon="sap-icon://navigation-left-arrow" press=".onBack"/><Button text="Weiter zum Stromanschluss" icon="sap-icon://navigation-right-arrow" iconFirst="false" type="Emphasized" press=".onNext"/></HBox>
+                        </VBox>
+                    </WizardStep>
+
+                    <WizardStep id="stepConnection" title="Stromanschluss" icon="sap-icon://measuring-point" validated="{state>/validated/3}">
+                        <VBox class="stepContent">
+                            <VBox class="stepHeading"><Title text="Verbrauchsstelle und Messsystem" level="H2"/><Text text="Wir prüfen die MaLo-ID formal. Existenz, Zuordnung und technische Eignung bleiben externe Prüfungen." class="stepHint"/></VBox>
+                            <VBox class="formCard formCardPrimary">
+                                <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="1" emptySpanL="1" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1">
+                                    <Label text="Jahresstromverbrauch" required="true" labelFor="annualConsumption"/><Input id="annualConsumption" value="{form>/annualConsumption}" placeholder="3500" type="Number" description="kWh/Jahr" change=".onConsumptionChange"/>
+                                    <Label text="Monatlicher Abschlag (optional)" labelFor="monthlyCost"/><Input id="monthlyCost" value="{form>/monthlyCost}" placeholder="95" type="Number" description="EUR"/>
+                                    <Label text="Marktlokations-ID (MaLo-ID)" required="true" labelFor="marketLocationId"/><VBox><Input id="marketLocationId" value="{form>/marketLocationId}" placeholder="11 Ziffern · meist auf Ihrer Stromrechnung" maxLength="11" type="Tel" valueState="{state>/fieldStates/marketLocationId}" valueStateText="{state>/fieldMessages/marketLocationId}"/><Text text="Die formale Gültigkeit bestätigt weder Existenz noch Zuordnung." class="fieldHelp"/></VBox>
+                                </form:SimpleForm>
+                                <HBox class="calculatorRow" alignItems="Center" wrap="Wrap"><Button text="Ersparnis unverbindlich berechnen" icon="sap-icon://simulate" press=".onOpenCalculator"/><Text text="{state>/calculatorResult}" visible="{= !!${state>/calculatorResult}}" class="calculatorResult"/></HBox>
+                                <HBox class="lookupRow" alignItems="Center" wrap="Wrap"><Button text="MaLo-ID formal prüfen" icon="sap-icon://inspection" type="Emphasized" press=".onLookupMarketLocation"/><ObjectStatus text="{= ${form>/marketLocationStatus} === 'FORMALLY_VALID' ? 'Formal gültig · externe Zuordnung ausstehend' : 'Formale Prüfung noch offen'}" state="{= ${form>/marketLocationStatus} === 'FORMALLY_VALID' ? 'Success' : 'Information'}" icon="sap-icon://pending"/></HBox>
+                            </VBox>
+                            <HBox class="statusCard" alignItems="Center"><core:Icon src="sap-icon://measuring-point" class="statusCardIcon"/><VBox><Title text="Ihr angegebener iMSys-Status" level="H3"/><ObjectStatus text="{= ${form>/imsysDeclared} ? 'Geeignetes iMSys angegeben · externe Prüfung ausstehend' : 'Kein geeignetes iMSys angegeben'}" state="{= ${form>/imsysDeclared} ? 'Information' : 'Error'}"/><Text text="Ein ausstehender Prüfstatus ist noch keine bestätigte technische Eignung." class="fieldHelp"/></VBox></HBox>
+                            <HBox class="stepActions" justifyContent="SpaceBetween"><Button text="Zurück" icon="sap-icon://navigation-left-arrow" press=".onBack"/><Button text="Weiter zu Verträgen" icon="sap-icon://navigation-right-arrow" iconFirst="false" type="Emphasized" press=".onNext"/></HBox>
+                        </VBox>
+                    </WizardStep>
+
+                    <WizardStep id="stepContracts" title="Verträge &amp; Versorgung" icon="sap-icon://document-text" validated="{state>/validated/4}">
+                        <VBox class="stepContent">
+                            <VBox class="stepHeading"><Title text="Verträge und künftige Versorgung" level="H2"/><Text text="Drei klar getrennte Entscheidungen. Keine Zustimmung ist vorausgewählt; keine Kündigung wird jetzt ausgeführt." class="stepHint"/></VBox>
+                            <VBox class="contractSection formCard formCardPrimary">
+                                <HBox class="sectionNumberRow" alignItems="Center"><Text text="1 von 2" class="sectionNumber"/><Title text="Sharing-Angebot bestätigen" level="H3"/></HBox>
+                                <Text text="Zeitgleich erzeugter Sharing-Strom wird anhand von 15-Minuten-Messwerten zugeordnet. Den übrigen Bedarf deckt ein frei wählbarer Reststromlieferant."/>
+                                <HBox class="documentLinks" wrap="Wrap"><Button text="Sharing-Liefervertrag · 2026.10" icon="sap-icon://document-text" type="Transparent"/><Button text="Vertrag zur gemeinsamen Nutzung · 2026.10" icon="sap-icon://document-text" type="Transparent"/></HBox>
+                                <CheckBox text="Ich bestätige die Sharing-Unterlagen." selected="{form>/contractConsent}"/>
+                                <CheckBox text="Ich stimme der gemeinsamen Nutzung im beschriebenen Umfang zu." selected="{form>/usageConsent}"/>
+                            </VBox>
+                            <VBox class="contractSection formCard">
+                                <HBox class="sectionNumberRow" alignItems="Center"><Text text="2 von 2" class="sectionNumber"/><Title text="Bisheriger Stromvertrag" level="H3"/></HBox>
+                                <ObjectStatus text="{= ${form>/existingElectricityContract} ? 'Bestehender Stromvertrag: Ja' : 'Bestehender Stromvertrag: Nein'}" state="Information"/>
+                                <form:SimpleForm editable="true" layout="ResponsiveGridLayout" visible="{form>/existingElectricityContract}" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="1" emptySpanL="1" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1">
+                                    <Label text="Bisheriger Lieferant" required="true" labelFor="currentSupplier"/><Input id="currentSupplier" value="{form>/currentSupplier}" placeholder="Name des Lieferanten"/>
+                                    <Label text="Kunden- oder Vertragsnummer" required="true" labelFor="contractNumber"/><Input id="contractNumber" value="{form>/contractNumber}"/>
+                                    <Label text="Gewünschter Teilnahmebeginn" labelFor="desiredStart"/><DatePicker id="desiredStart" value="{form>/desiredStart}" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" placeholder="TT.MM.JJJJ"/>
+                                </form:SimpleForm>
+                                <VBox visible="{form>/existingElectricityContract}" class="consentBox"><CheckBox text="Ich beauftrage die Kündigung meines bisherigen Vertrags." selected="{form>/cancellationOrder}"/><CheckBox text="Ich erteile die Vollmacht zur Einsicht in die erforderlichen Vertragsdaten." selected="{form>/cancellationPowerOfAttorney}"/><Text text="Der Auftrag wird erst mit dem abschließenden Antrag eingereicht und nur nach positiver Prüfung sowie gesicherter Anschlussversorgung ausgeführt." class="fieldHelp"/></VBox>
+                            </VBox>
+                            <HBox class="stepActions" justifyContent="SpaceBetween"><Button text="Zurück" icon="sap-icon://navigation-left-arrow" press=".onBack"/><Button text="Weiter zu Zahlung" icon="sap-icon://navigation-right-arrow" iconFirst="false" type="Emphasized" press=".onNext"/></HBox>
+                        </VBox>
+                    </WizardStep>
+
+                    <WizardStep id="stepPayment" title="Zahlung" icon="sap-icon://credit-card" validated="{state>/validated/5}">
+                        <VBox class="stepContent">
+                            <VBox class="stepHeading"><Title text="Kontoinformationen und SEPA" level="H2"/><Text text="Das Mandat löst bis zur Einreichung keine Abbuchung aus." class="stepHint"/></VBox>
+                            <VBox class="formCard formCardPrimary">
+                                <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="1" emptySpanL="1" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1">
+                                    <Label text="Kontoinhaber" required="true" labelFor="accountHolder"/><Input id="accountHolder" value="{form>/accountHolder}" placeholder="Max Mustermann"/>
+                                    <Label text="IBAN" required="true" labelFor="iban"/><Input id="iban" value="{form>/iban}" placeholder="DE89 3704 0044 0532 0130 00" change=".onIbanChange" valueState="{state>/fieldStates/iban}" valueStateText="{state>/fieldMessages/iban}"/>
+                                </form:SimpleForm>
+                                <VBox class="mandateBox"><HBox alignItems="Center"><core:Icon src="sap-icon://credit-card"/><Title text="SEPA-Lastschriftmandat" level="H3"/></HBox><Text text="Zahlungsempfänger und Gläubiger-ID werden vor Produktivnutzung festgelegt. Die Mandatsreferenz wird später mitgeteilt."/><Text text="Ich ermächtige den später festgelegten Zahlungsempfänger, Zahlungen von meinem Konto mittels Lastschrift einzuziehen. Zugleich weise ich mein Kreditinstitut an, die Lastschriften einzulösen. Innerhalb von acht Wochen kann die Erstattung des belasteten Betrags verlangt werden; es gelten die vereinbarten Bedingungen." class="mandateText"/><CheckBox text="Ich erteile das angezeigte SEPA-Lastschriftmandat." selected="{form>/sepaConsent}"/></VBox>
+                            </VBox>
+                            <HBox class="stepActions" justifyContent="SpaceBetween"><Button text="Zurück" icon="sap-icon://navigation-left-arrow" press=".onBack"/><Button text="Weiter zur Prüfung" icon="sap-icon://navigation-right-arrow" iconFirst="false" type="Emphasized" press=".onNext"/></HBox>
+                        </VBox>
+                    </WizardStep>
+
+                    <WizardStep id="stepReview" title="Prüfen &amp; absenden" icon="sap-icon://inspect" validated="{state>/validated/6}">
+                        <VBox class="stepContent">
+                            <VBox class="stepHeading"><Title text="Prüfen und Antrag einreichen" level="H2"/><Text text="Kontrollieren Sie die wichtigsten Angaben. Eine Einreichung ist noch keine Annahme oder aktive Stromzuordnung." class="stepHint"/></VBox>
+                            <VBox class="summaryCard">
+                                <HBox class="summarySection" alignItems="Start"><core:Icon src="sap-icon://person-placeholder"/><VBox><Text text="Antragsteller" class="summaryLabel"/><Title text="{= ${form>/customerType} === 'BUSINESS' ? ${form>/companyName} : ${form>/firstName} + ' ' + ${form>/lastName}}" level="H4"/><Text text="{form>/email}"/><ObjectStatus text="{= ${form>/emailVerified} ? 'E-Mail bestätigt' : 'E-Mail noch nicht bestätigt'}" state="{= ${form>/emailVerified} ? 'Success' : 'Error'}"/></VBox></HBox>
+                                <HBox class="summarySection" alignItems="Start"><core:Icon src="sap-icon://home"/><VBox><Text text="Verbrauchsstelle" class="summaryLabel"/><Title text="{= ${form>/consumptionAddressDifferent} ? ${form>/consumptionStreet} + ' ' + ${form>/consumptionHouseNumber} : ${form>/street} + ' ' + ${form>/houseNumber}}" level="H4"/><Text text="{= ${form>/consumptionAddressDifferent} ? ${form>/consumptionPostalCode} + ' ' + ${form>/consumptionCity} : ${form>/postalCode} + ' ' + ${form>/city}}"/><Text text="{= ${form>/annualConsumption} + ' kWh pro Jahr'}"/></VBox></HBox>
+                                <HBox class="summarySection" alignItems="Start"><core:Icon src="sap-icon://measuring-point"/><VBox><Text text="Anschluss" class="summaryLabel"/><Title text="{= 'MaLo-ID ' + ${form>/marketLocationId}}" level="H4"/><ObjectStatus text="Externe Fachprüfung ausstehend" state="Information"/></VBox></HBox>
+                                <HBox class="summarySection" alignItems="Start"><core:Icon src="sap-icon://credit-card"/><VBox><Text text="Zahlung" class="summaryLabel"/><Title text="{form>/accountHolder}" level="H4"/><ObjectStatus text="{= ${form>/sepaConsent} ? 'SEPA-Mandat bestätigt' : 'SEPA-Zustimmung noch offen'}" state="{= ${form>/sepaConsent} ? 'Success' : 'Error'}"/></VBox></HBox>
+                            </VBox>
+                            <VBox class="formCard signatureCard"><HBox class="cardTitleRow" alignItems="Center"><core:Icon src="sap-icon://signature"/><VBox><Title text="Unterschrift" level="H3"/><Text text="Die Unterschrift ist bereits eingetragen und kann bei Bedarf neu gezeichnet werden." class="sectionNote"/></VBox></HBox><custom:SignaturePad id="signaturePad" presetName="{form>/signatureName}" change=".onSignatureDrawn"/><HBox class="signatureActions" wrap="Wrap"><Button text="Unterschrift löschen" icon="sap-icon://eraser" type="Transparent" press=".onClearSignature"/><Button text="Unterschrift speichern" icon="sap-icon://save" type="Emphasized" press=".onSign"/></HBox><ObjectStatus text="{= ${form>/signedAt} ? 'Unterschrift gespeichert' : 'Noch nicht unterschrieben'}" state="{= ${form>/signedAt} ? 'Success' : 'Warning'}"/></VBox>
+                            <MessageStrip text="Es entsteht keine echte rechtsverbindliche Bestellung. Der Abschluss erzeugt einen Antrag mit dem Status „In Prüfung“." type="Warning" showIcon="true"/>
+                            <HBox class="stepActions" justifyContent="SpaceBetween"><Button text="Zurück" icon="sap-icon://navigation-left-arrow" press=".onBack"/><Button text="Antrag einreichen" icon="sap-icon://paper-plane" iconFirst="false" type="Emphasized" press=".onSubmit"/></HBox>
+                        </VBox>
+                    </WizardStep>
+                </Wizard>
+
+                <VBox visible="{= ${state>/submitted} || ${form>/status} === 'IN_REVIEW'}" class="submissionSuccess" alignItems="Center">
+                    <core:Icon src="sap-icon://message-success" decorative="false" alt="Erfolgreich abgegeben" class="submissionSuccessIcon"/>
+                    <Title text="Antrag abgegeben" level="H1" wrapping="true" textAlign="Center"/>
+                    <Text text="Vielen Dank. Ihr Antrag wurde erfolgreich übermittelt und wird jetzt geprüft." textAlign="Center" class="submissionSuccessText"/>
+                    <ObjectStatus text="Status: In Prüfung" state="Success" icon="sap-icon://pending" class="submissionStatus"/>
+                    <VBox visible="{= !!${state>/submissionReference} || !!${form>/referenceNumber}}" class="submissionReference" alignItems="Center">
+                        <Text text="Vorgangsnummer" class="summaryLabel"/>
+                        <Title text="{= ${state>/submissionReference} || ${form>/referenceNumber}}" level="H3" wrapping="true" textAlign="Center"/>
+                    </VBox>
+                    <Text text="Sie können diese Seite jetzt schließen. Nach einem Neuladen beginnt ein neuer Antrag." textAlign="Center" class="submissionSuccessNote"/>
+                </VBox>
+            </VBox>
+        </content>
     </Page>
 </mvc:View>
