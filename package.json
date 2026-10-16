@@ -33,6 +33,6 @@
   "sapux": [
     "app/community-management",
     "app/producer-portal",
-    "app/participant-onboarding"
-  ]
-}
+    "app/participant-onboarding",
+    "app/energy-sharing-portal"
+  ]}

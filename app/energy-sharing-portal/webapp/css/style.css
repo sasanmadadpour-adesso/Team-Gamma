@@ -1,0 +1,17 @@
+.dashboardKpiRow {
+    gap: 1rem;
+}
+
+.dashboardKpiTile {
+    min-width: 14rem;
+    flex: 1 1 16rem;
+    padding: 1rem;
+    margin: 0.5rem;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.5rem;
+    background: #ffffff;
+}
+
+.actionBar .sapMButton {
+    margin-right: 0.5rem;
+}
