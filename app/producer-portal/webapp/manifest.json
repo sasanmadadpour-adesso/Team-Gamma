@@ -136,7 +136,7 @@
   },
   "sap.fiori": {
     "registrationIds": [],
-    "archeType": "transactional"
+    "archeType": "analytical"
   },
   "sap.fe": {
     "app": {

@@ -1,0 +1,2 @@
+ID;community_ID;participant_ID;plant_ID;positionType;quantityKwh;ratePerKwh;amount;payer;payee;periodStart;periodEnd
+10101010-1010-1010-1010-101010101010;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa;;bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb;COMMUNITY_SHARE;12.500000;0.1200;1.50;Community Sonnenquartier;Jan Koller;2026-10-16;2026-10-16
