@@ -169,3 +169,22 @@
     border: 1px solid #d9e0e5;
     border-radius: 0.25rem;
 }
+
+.communityInfoBox {
+    border: 1px solid #d9e0e5;
+    background: #ffffff;
+    padding: 0.5rem 1rem;
+}
+
+.communityInfoRow {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.communityInfoRow:last-child {
+    border-bottom: none;
+}
+
+.appTabRow .sapMBtn {
+    margin-right: 0.5rem;
+}

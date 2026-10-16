@@ -7,153 +7,438 @@
     xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds"
     xmlns:core="sap.ui.core">
 
-    <HBox class="appShell" width="100%">
-        <VBox class="appSidebar" width="14rem">
-            <Title text="ENERGY SHARING" titleStyle="H5" class="appBrand"/>
+    <VBox class="appRoot" width="100%">
+        <VBox class="appLoginScreen" width="100%" visible="{= ${portal>/authenticated} !== true }">
+            <VBox class="appLoginPanel">
+                <Title text="ENERGY SHARING" titleStyle="H1" class="appLoginBrand"/>
+                <Title text="Willkommen bei Energy Sharing" titleStyle="H3" class="appLoginTitle"/>
+                <Text text="Bitte wählen Sie für die Demo Ihre Rolle." class="appLoginText"/>
 
-            <Text text="NAVIGATION" class="appSectionLabel"/>
-            <Button text="Übersicht" type="Transparent" class="appNavButton appNavButtonSelected"/>
-            <Button text="Communities" type="Transparent" press=".onCommunityManagement" class="appNavButton"/>
-            <Button text="Anlagen" type="Transparent" press=".onProducerPortal" class="appNavButton"/>
-            <Button text="Teilnehmer" type="Transparent" press=".onParticipantOnboarding" class="appNavButton"/>
+                <VBox class="appLoginChoice">
+                    <Title text="Lieferant / Community Manager" titleStyle="H5"/>
+                    <Text text="Communities, Anlagen und Teilnehmer verwalten" class="appLoginText"/>
+                    <Button text="Als Lieferant anmelden" type="Emphasized" press=".onLoginManager"/>
+                </VBox>
 
-            <Text text="SYSTEME" class="appSectionLabel appSectionLabelTop"/>
-            <HBox alignItems="Center" class="appSystemRow">
-                <Text text="SAP S/4HANA" class="appSystemName"/>
-                <Text text="●" class="appStatusDot appStatusSuccess"/>
-            </HBox>
-            <HBox alignItems="Center" class="appSystemRow">
-                <Text text="Lumenaza" class="appSystemName"/>
-                <Text text="●" class="appStatusDot appStatusSuccess"/>
-            </HBox>
-
-            <VBox class="appSidebarFooter">
-                <Text text="Energy Sharing" class="appFooterTitle"/>
-                <Text text="Demo · 16.10.2026" class="appFooterText"/>
+                <VBox class="appLoginChoice">
+                    <Title text="Kunde" titleStyle="H5"/>
+                    <Text text="Eigene Teilnahme, Energie und Abrechnung einsehen" class="appLoginText"/>
+                    <Button text="Als Kunde anmelden" type="Default" press=".onLoginCustomer"/>
+                </VBox>
             </VBox>
         </VBox>
 
-        <VBox class="appMain" width="100%">
-            <VBox class="appContent">
-                <VBox class="appPageHeader">
-                    <Text text="ÜBERSICHT / COMMUNITY" class="appEyebrow"/>
-                    <Title text="{dashboard>/communityName}" titleStyle="H1"/>
-                    <HBox alignItems="Center" wrap="Wrap" class="appHeaderMeta">
-                        <Text text="Frankfurt am Main · Energy-Sharing-Community" class="appMuted appHeaderLocation"/>
-                        <ObjectStatus text="{dashboard>/communityStatus}" state="Success"/>
+        <HBox class="appShell" width="100%" visible="{= ${portal>/authenticated} === true }">
+            <VBox class="appSidebar" width="14rem">
+                <VBox visible="{= ${portal>/role} === 'manager' }">
+                    <Title text="ENERGY SHARING" titleStyle="H5" class="appBrand"/>
+                    <Text text="NAVIGATION" class="appSectionLabel"/>
+                    <Button text="Übersicht" type="{= ${portal>/view} === 'dashboard' ? 'Emphasized' : 'Transparent' }" press=".onShowDashboard" class="appNavButton"/>
+                    <Button text="Communities" type="{= ${portal>/view} === 'community' ? 'Emphasized' : 'Transparent' }" press=".onShowCommunity" class="appNavButton"/>
+                    <Button text="Anlagen" type="Transparent" press=".onProducerPortal" class="appNavButton"/>
+                    <Button text="Teilnehmer" type="Transparent" press=".onParticipantOnboarding" class="appNavButton"/>
+                    <Text text="SYSTEME" class="appSectionLabel appSectionLabelTop"/>
+                    <HBox alignItems="Center" class="appSystemRow">
+                        <Text text="SAP S/4HANA" class="appSystemName"/>
+                        <Text text="●" class="appStatusDot appStatusSuccess"/>
                     </HBox>
-                    <Text text="Erzeugung, Verteilung und Community-Nutzung im Überblick" class="appSubtitle"/>
+                    <HBox alignItems="Center" class="appSystemRow">
+                        <Text text="Lumenaza" class="appSystemName"/>
+                        <Text text="●" class="appStatusDot appStatusSuccess"/>
+                    </HBox>
                 </VBox>
 
-                <VBox class="appSection">
-                    <Text text="BETRIEB" class="appEyebrow"/>
-                    <Title text="Energie heute" titleStyle="H3" class="appSectionHeading"/>
-                    <FlexBox wrap="Wrap" alignItems="Stretch" class="dashboardKpiRow">
-                        <VBox class="dashboardKpiTile">
-                            <Label text="Erzeugung"/>
-                            <ObjectNumber number="{dashboard>/generationToday}" unit="kWh" emphasized="true"/>
-                        </VBox>
-                        <VBox class="dashboardKpiTile">
-                            <Label text="Community-Nutzung"/>
-                            <ObjectNumber number="{dashboard>/communityUsed}" unit="kWh" emphasized="true"/>
-                        </VBox>
-                        <VBox class="dashboardKpiTile">
-                            <Label text="Überschuss"/>
-                            <ObjectNumber number="{dashboard>/surplus}" unit="kWh" emphasized="true"/>
-                        </VBox>
-                        <VBox class="dashboardKpiTile">
-                            <Label text="Nutzungsquote"/>
-                            <ObjectNumber number="{dashboard>/usageRate}" unit=" %" emphasized="true"/>
-                        </VBox>
-                        <VBox class="dashboardKpiTile">
-                            <Label text="Erlös"/>
-                            <ObjectNumber number="{dashboard>/revenue}" unit="EUR" emphasized="true"/>
-                        </VBox>
-                    </FlexBox>
+                <VBox visible="{= ${portal>/role} === 'customer' }">
+                    <Title text="ENERGY SHARING" titleStyle="H5" class="appBrand"/>
+                    <Text text="NAVIGATION" class="appSectionLabel"/>
+                    <Button text="Übersicht" type="Emphasized" class="appNavButton"/>
+                    <Button text="Meine Community" type="Transparent" class="appNavButton"/>
+                    <Button text="Meine Anlage" type="Transparent" class="appNavButton"/>
+                    <Button text="Meine Energie" type="Transparent" class="appNavButton"/>
+                    <Button text="Abrechnung" type="Transparent" class="appNavButton"/>
                 </VBox>
 
-                <VBox class="appSection">
-                    <Text text="BETRIEB" class="appEyebrow"/>
-                    <Title text="Energie im Tagesverlauf" titleStyle="H3" class="appSectionHeading"/>
-                    <Text text="15-Minuten-Werte" class="appSectionSubtitle"/>
-                    <VBox class="appChartPanel">
-                        <viz:VizFrame
-                            id="energyChart"
-                            height="350px"
-                            width="100%"
-                            vizType="line"
-                            vizProperties="{
-                                title: {visible: false},
-                                plotArea: {dataLabel: {visible: false}},
-                                legend: {title: {visible: false}},
-                                valueAxis: {title: {visible: true, text: 'kWh'}},
-                                categoryAxis: {title: {visible: true, text: 'Zeit'}, label: {rotation: 45}}
-                            }">
-                            <viz:dataset>
-                                <vizData:FlattenedDataset data="{dashboard>/chartData}">
-                                    <vizData:dimensions>
-                                        <vizData:DimensionDefinition name="Zeit" value="{timeLabel}"/>
-                                    </vizData:dimensions>
-                                    <vizData:measures>
-                                        <vizData:MeasureDefinition name="Erzeugung" value="{generationKwh}"/>
-                                        <vizData:MeasureDefinition name="Community-Nutzung" value="{communityKwh}"/>
-                                        <vizData:MeasureDefinition name="Prognose" value="{forecastKwh}"/>
-                                        <vizData:MeasureDefinition name="Überschuss" value="{surplusKwh}"/>
-                                    </vizData:measures>
-                                </vizData:FlattenedDataset>
-                            </viz:dataset>
-                            <viz:feeds>
-                                <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Erzeugung"/>
-                                <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Community-Nutzung"/>
-                                <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Prognose"/>
-                                <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Überschuss"/>
-                                <vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Zeit"/>
-                            </viz:feeds>
-                        </viz:VizFrame>
+                <VBox class="appSidebarFooter" visible="{= ${portal>/authenticated} === true }">
+                    <Text text="Energy Sharing" class="appFooterTitle"/>
+                    <Text text="{= ${portal>/role} === 'manager' ? 'Lieferant / Community Manager' : 'Kunde' }" class="appFooterText"/>
+                    <Button text="Abmelden" type="Transparent" press=".onLogout" class="appNavButton"/>
+                </VBox>
+            </VBox>
+
+            <VBox class="appMain" width="100%">
+                <VBox class="appContent" visible="{= ${portal>/role} === 'manager' &amp;&amp; ${portal>/view} === 'dashboard' }">
+                    <VBox class="appPageHeader">
+                        <Text text="ÜBERSICHT / COMMUNITY" class="appEyebrow"/>
+                        <Title text="{dashboard>/communityName}" titleStyle="H1"/>
+                        <HBox alignItems="Center" wrap="Wrap" class="appHeaderMeta">
+                            <Text text="Frankfurt am Main · Energy-Sharing-Community" class="appMuted appHeaderLocation"/>
+                            <ObjectStatus text="{dashboard>/communityStatus}" state="Success"/>
+                        </HBox>
+                        <Text text="Erzeugung, Verteilung und Community-Nutzung im Überblick" class="appSubtitle"/>
+                    </VBox>
+
+                    <VBox class="appSection">
+                        <Text text="BETRIEB" class="appEyebrow"/>
+                        <Title text="Energie heute" titleStyle="H3" class="appSectionHeading"/>
+                        <FlexBox wrap="Wrap" alignItems="Stretch" class="dashboardKpiRow">
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Erzeugung"/>
+                                <ObjectNumber number="{dashboard>/generationToday}" unit="kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Community-Nutzung"/>
+                                <ObjectNumber number="{dashboard>/communityUsed}" unit="kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Überschuss"/>
+                                <ObjectNumber number="{dashboard>/surplus}" unit="kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Nutzungsquote"/>
+                                <ObjectNumber number="{dashboard>/usageRate}" unit=" %" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Erlös"/>
+                                <ObjectNumber number="{dashboard>/revenue}" unit="EUR" emphasized="true"/>
+                            </VBox>
+                        </FlexBox>
+                    </VBox>
+
+                    <VBox class="appSection">
+                        <Text text="BETRIEB" class="appEyebrow"/>
+                        <Title text="Energie im Tagesverlauf" titleStyle="H3" class="appSectionHeading"/>
+                        <Text text="15-Minuten-Werte" class="appSectionSubtitle"/>
+                        <VBox class="appChartPanel">
+                            <viz:VizFrame
+                                id="energyChart"
+                                height="350px"
+                                width="100%"
+                                vizType="line"
+                                vizProperties="{
+                                    title: {visible: false},
+                                    plotArea: {dataLabel: {visible: false}},
+                                    legend: {title: {visible: false}},
+                                    valueAxis: {title: {visible: true, text: 'kWh'}},
+                                    categoryAxis: {title: {visible: true, text: 'Zeit'}, label: {rotation: 45}}
+                                }">
+                                <viz:dataset>
+                                    <vizData:FlattenedDataset data="{dashboard>/chartData}">
+                                        <vizData:dimensions>
+                                            <vizData:DimensionDefinition name="Zeit" value="{timeLabel}"/>
+                                        </vizData:dimensions>
+                                        <vizData:measures>
+                                            <vizData:MeasureDefinition name="Erzeugung" value="{generationKwh}"/>
+                                            <vizData:MeasureDefinition name="Community-Nutzung" value="{communityKwh}"/>
+                                            <vizData:MeasureDefinition name="Prognose" value="{forecastKwh}"/>
+                                            <vizData:MeasureDefinition name="Überschuss" value="{surplusKwh}"/>
+                                        </vizData:measures>
+                                    </vizData:FlattenedDataset>
+                                </viz:dataset>
+                                <viz:feeds>
+                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Erzeugung"/>
+                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Community-Nutzung"/>
+                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Prognose"/>
+                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Überschuss"/>
+                                    <vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Zeit"/>
+                                </viz:feeds>
+                            </viz:VizFrame>
+                        </VBox>
+                    </VBox>
+
+                    <VBox class="appSection">
+                        <Title text="Schnellaktionen" titleStyle="H3" class="appSectionHeading"/>
+                        <HBox wrap="Wrap">
+                            <Button text="Anlage anmelden" type="Emphasized" icon="sap-icon://add" press=".onRegisterPlant" class="sapUiSmallMarginEnd"/>
+                            <Button text="Anlage zuordnen" type="Default" icon="sap-icon://chain-link" press=".onAssignPlant" class="sapUiSmallMarginEnd"/>
+                            <Button text="Teilnehmer aufnehmen" type="Default" icon="sap-icon://person-placeholder" press=".onOnboardParticipant"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox class="appSection appManagementRow">
+                        <Link text="Anlagen verwalten" press=".onProducerPortal" class="sapUiSmallMarginEnd"/>
+                        <Link text="Community verwalten" press=".onCommunityManagement" class="sapUiSmallMarginEnd"/>
+                        <Link text="Teilnehmer verwalten" press=".onParticipantOnboarding"/>
+                    </VBox>
+
+                    <VBox class="appSection">
+                        <Text text="BETRIEB" class="appEyebrow"/>
+                        <Title text="15-Minuten-Werte" titleStyle="H3" class="appSectionHeading"/>
+                        <Table items="{dashboard>/chartData}" growing="true" growingThreshold="20">
+                            <columns>
+                                <Column><Text text="Zeit"/></Column>
+                                <Column><Text text="Erzeugung (kWh)"/></Column>
+                                <Column><Text text="Community-Nutzung (kWh)"/></Column>
+                                <Column><Text text="Überschuss (kWh)"/></Column>
+                                <Column><Text text="Prognose (kWh)"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{dashboard>timeLabel}"/>
+                                        <Text text="{= Number(${dashboard>generationKwh}).toFixed(2) }"/>
+                                        <Text text="{= Number(${dashboard>communityKwh}).toFixed(2) }"/>
+                                        <Text text="{= Number(${dashboard>surplusKwh}).toFixed(2) }"/>
+                                        <Text text="{= Number(${dashboard>forecastKwh}).toFixed(2) }"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
                     </VBox>
                 </VBox>
 
-                <VBox class="appSection">
-                    <Title text="Schnellaktionen" titleStyle="H3" class="appSectionHeading"/>
-                    <HBox wrap="Wrap">
-                        <Button text="Anlage anmelden" type="Emphasized" icon="sap-icon://add" press=".onRegisterPlant" class="sapUiSmallMarginEnd"/>
-                        <Button text="Anlage zuordnen" type="Default" icon="sap-icon://chain-link" press=".onAssignPlant" class="sapUiSmallMarginEnd"/>
-                        <Button text="Teilnehmer aufnehmen" type="Default" icon="sap-icon://person-placeholder" press=".onOnboardParticipant"/>
+                <VBox class="appContent" visible="{= ${portal>/role} === 'manager' &amp;&amp; ${portal>/view} === 'community' }">
+                    <VBox class="appPageHeader">
+                        <Text text="COMMUNITY / SONNENQUARTIER FRANKFURT" class="appEyebrow"/>
+                        <Title text="{community>/name}" titleStyle="H1"/>
+                        <HBox alignItems="Center" wrap="Wrap" class="appHeaderMeta">
+                            <Text text="Frankfurt am Main · Energy-Sharing-Community" class="appMuted appHeaderLocation"/>
+                            <ObjectStatus text="{community>/statusLabel}" state="Success"/>
+                        </HBox>
+                        <Text text="Erzeugung, Verteilung und Community-Nutzung im Überblick" class="appSubtitle"/>
+                    </VBox>
+
+                    <HBox class="appTabRow sapUiSmallMarginBottom">
+                        <Button text="Übersicht" type="{= ${portal>/communityTab} === 'overview' ? 'Emphasized' : 'Transparent' }" press=".onCommunityOverview" class="sapUiSmallMarginEnd"/>
+                        <Button text="Einspeiseanlagen" type="{= ${portal>/communityTab} === 'plants' ? 'Emphasized' : 'Transparent' }" press=".onCommunityPlants" class="sapUiSmallMarginEnd"/>
+                        <Button text="Teilnehmer" type="{= ${portal>/communityTab} === 'participants' ? 'Emphasized' : 'Transparent' }" press=".onCommunityParticipants" class="sapUiSmallMarginEnd"/>
+                        <Button text="Abrechnung" type="{= ${portal>/communityTab} === 'billing' ? 'Emphasized' : 'Transparent' }" press=".onCommunityBilling"/>
                     </HBox>
+
+                    <VBox class="appSection" visible="{= ${portal>/communityTab} === 'overview' }">
+                        <Text text="BETRIEB" class="appEyebrow"/>
+                        <Title text="Community-Übersicht" titleStyle="H3" class="appSectionHeading"/>
+                        <VBox class="communityInfoBox">
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Status"/>
+                                <ObjectStatus text="{community>/statusLabel}" state="Success"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Bilanzierungsgebiet"/>
+                                <Text text="{community>/balancingArea}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Bilanzkreis-ID"/>
+                                <Text text="{community>/bkId}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Preismodell"/>
+                                <Text text="{community>/priceModelLabel}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Arbeitspreis"/>
+                                <Text text="{community>/fixedPricePerKwh} EUR/kWh"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Reststrompreis"/>
+                                <Text text="{community>/residualPricePerKwh} EUR/kWh"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Gültig ab"/>
+                                <Text text="{community>/validFrom}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Gültig bis"/>
+                                <Text text="{community>/validTo}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Zugeordnete Einspeiseanlagen"/>
+                                <Text text="{community>/plantsCount}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Teilnehmer"/>
+                                <Text text="{community>/participantsCount}"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <VBox class="appSection" visible="{= ${portal>/communityTab} === 'overview' }">
+                        <Text text="BETRIEB" class="appEyebrow"/>
+                        <Title text="Energie heute" titleStyle="H3" class="appSectionHeading"/>
+                        <FlexBox wrap="Wrap" alignItems="Stretch" class="dashboardKpiRow">
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Erzeugung"/>
+                                <ObjectNumber number="{dashboard>/generationToday}" unit="kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Community-Nutzung"/>
+                                <ObjectNumber number="{dashboard>/communityUsed}" unit="kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Überschuss"/>
+                                <ObjectNumber number="{dashboard>/surplus}" unit="kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Nutzungsquote"/>
+                                <ObjectNumber number="{dashboard>/usageRate}" unit=" %" emphasized="true"/>
+                            </VBox>
+                        </FlexBox>
+                    </VBox>
+
+                    <VBox class="appSection" visible="{= ${portal>/communityTab} === 'plants' }">
+                        <Text text="OBJECT PAGE" class="appEyebrow"/>
+                        <Title text="Einspeiseanlagen" titleStyle="H3" class="appSectionHeading"/>
+                        <HBox justifyContent="End" class="sapUiSmallMarginBottom">
+                            <Button text="Anlage zuordnen" type="Default" icon="sap-icon://chain-link" press=".onAssignPlant"/>
+                        </HBox>
+                        <Table items="{plantView>/items}" growing="true" growingThreshold="20">
+                            <columns>
+                                <Column><Text text="Anlage"/></Column>
+                                <Column><Text text="Art / Leistung"/></Column>
+                                <Column><Text text="MaLo / MeLo"/></Column>
+                                <Column><Text text="iMSys"/></Column>
+                                <Column><Text text="Status"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{plantView>operatorName}"/>
+                                        <Text text="{plantView>productionType} / {= Number(${plantView>capacityKw}).toFixed(2) } kW"/>
+                                        <Text text="{plantView>marketLocationId} / {plantView>meteringLocationId}"/>
+                                        <HBox alignItems="Center">
+                                            <Text text="{= ${plantView>imsysActive} ? 'Aktiv' : 'Inaktiv' }"/>
+                                            <Text text="  ({plantView>meteringSystem})" class="appMuted"/>
+                                        </HBox>
+                                        <ObjectStatus text="{plantView>status}" state="Success"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+
+                        <VBox class="appSection">
+                            <Title text="DETAILANSICHT" titleStyle="H4" class="appSectionHeading"/>
+                            <Text text="Prüfpunkte: {plantView>/plant/operatorName}" class="appSectionSubtitle"/>
+                            <Table items="{plantView>/checkpoints}" growing="true" growingThreshold="20">
+                                <columns>
+                                    <Column><Text text="Prüfpunkt"/></Column>
+                                    <Column><Text text="Status"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{plantView>label}"/>
+                                            <ObjectStatus
+                                                text="{= ${plantView>status} === 'POSITIVE' ? 'Positiv' : (${plantView>status} === 'NEGATIVE' ? 'Negativ' : 'Offen') }"
+                                                state="{= ${plantView>status} === 'POSITIVE' ? 'Success' : (${plantView>status} === 'NEGATIVE' ? 'Error' : 'Warning') }"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </VBox>
+                    </VBox>
+
+                    <VBox class="appSection" visible="{= ${portal>/communityTab} === 'participants' }">
+                        <Text text="Teilnehmer folgt."/>
+                    </VBox>
+
+                    <VBox class="appSection" visible="{= ${portal>/communityTab} === 'billing' }">
+                        <Text text="Abrechnung folgt."/>
+                    </VBox>
                 </VBox>
 
-                <VBox class="appSection appManagementRow">
-                    <Link text="Anlagen verwalten" press=".onProducerPortal" class="sapUiSmallMarginEnd"/>
-                    <Link text="Community verwalten" press=".onCommunityManagement" class="sapUiSmallMarginEnd"/>
-                    <Link text="Teilnehmer verwalten" press=".onParticipantOnboarding"/>
-                </VBox>
+                <VBox class="appContent" visible="{= ${portal>/role} === 'customer' }">
+                    <VBox class="appPageHeader">
+                        <Text text="MEINE ÜBERSICHT" class="appEyebrow"/>
+                        <Title text="Hallo Jan Koller" titleStyle="H1"/>
+                        <HBox alignItems="Center" wrap="Wrap" class="appHeaderMeta">
+                            <Text text="Sonnenquartier Frankfurt" class="appMuted appHeaderLocation"/>
+                            <ObjectStatus text="Aktiv" state="Success"/>
+                        </HBox>
+                        <Text text="Meine Energie im Sonnenquartier Frankfurt" class="appSubtitle"/>
+                    </VBox>
 
-                <VBox class="appSection">
-                    <Text text="BETRIEB" class="appEyebrow"/>
-                    <Title text="15-Minuten-Werte" titleStyle="H3" class="appSectionHeading"/>
-                    <Table items="{dashboard>/chartData}" growing="true" growingThreshold="20">
-                        <columns>
-                            <Column><Text text="Zeit"/></Column>
-                            <Column><Text text="Erzeugung (kWh)"/></Column>
-                            <Column><Text text="Community-Nutzung (kWh)"/></Column>
-                            <Column><Text text="Überschuss (kWh)"/></Column>
-                            <Column><Text text="Prognose (kWh)"/></Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <Text text="{dashboard>timeLabel}"/>
-                                    <Text text="{= Number(${dashboard>generationKwh}).toFixed(2) }"/>
-                                    <Text text="{= Number(${dashboard>communityKwh}).toFixed(2) }"/>
-                                    <Text text="{= Number(${dashboard>surplusKwh}).toFixed(2) }"/>
-                                    <Text text="{= Number(${dashboard>forecastKwh}).toFixed(2) }"/>
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
+                    <VBox class="appSection">
+                        <Text text="MEINE ANLAGE" class="appEyebrow"/>
+                        <Title text="Jan Koller" titleStyle="H3" class="appSectionHeading"/>
+                        <VBox class="communityInfoBox">
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Erzeugungsart"/>
+                                <Text text="{plantView>/plant/productionType}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Leistung"/>
+                                <Text text="{plantView>/plant/capacityKw} kW"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Einspeise-MaLo"/>
+                                <Text text="{plantView>/plant/marketLocationId}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Messlokation"/>
+                                <Text text="{plantView>/plant/meteringLocationId}"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="iMSys"/>
+                                <Text text="{= ${plantView>/plant/imsysActive} ? 'Aktiv' : 'Inaktiv' } ({plantView>/plant/meteringSystem})"/>
+                            </HBox>
+                            <HBox justifyContent="SpaceBetween" class="communityInfoRow">
+                                <Text text="Status"/>
+                                <ObjectStatus text="{= ${plantView>/plant/status} === 'ASSIGNED' ? 'Zugeordnet' : ${plantView>/plant/status} }" state="Success"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <VBox class="appSection">
+                        <Text text="HEUTE" class="appEyebrow"/>
+                        <Title text="Energie heute" titleStyle="H3" class="appSectionHeading"/>
+                        <FlexBox wrap="Wrap" alignItems="Stretch" class="dashboardKpiRow">
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Erzeugung"/>
+                                <ObjectNumber number="{dashboard>/generationToday}" unit="kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Community-Nutzung"/>
+                                <ObjectNumber number="{dashboard>/communityUsed}" unit="kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Überschuss"/>
+                                <ObjectNumber number="{dashboard>/surplus}" unit="kWh" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Nutzungsquote"/>
+                                <ObjectNumber number="{dashboard>/usageRate}" unit=" %" emphasized="true"/>
+                            </VBox>
+                            <VBox class="dashboardKpiTile">
+                                <Label text="Erlös"/>
+                                <ObjectNumber number="{dashboard>/revenue}" unit="EUR" emphasized="true"/>
+                            </VBox>
+                        </FlexBox>
+                    </VBox>
+
+                    <VBox class="appSection">
+                        <Text text="MEINE ENERGIE HEUTE" class="appEyebrow"/>
+                        <Title text="Energieverlauf" titleStyle="H3" class="appSectionHeading"/>
+                        <VBox class="appChartPanel">
+                            <viz:VizFrame
+                                id="customerEnergyChart"
+                                height="350px"
+                                width="100%"
+                                vizType="line">
+                                <viz:dataset>
+                                    <vizData:FlattenedDataset data="{dashboard>/chartData}">
+                                        <vizData:dimensions>
+                                            <vizData:DimensionDefinition name="Zeit" value="{timeLabel}"/>
+                                        </vizData:dimensions>
+                                        <vizData:measures>
+                                            <vizData:MeasureDefinition name="Erzeugung" value="{generationKwh}"/>
+                                            <vizData:MeasureDefinition name="Community-Nutzung" value="{communityKwh}"/>
+                                            <vizData:MeasureDefinition name="Prognose" value="{forecastKwh}"/>
+                                            <vizData:MeasureDefinition name="Überschuss" value="{surplusKwh}"/>
+                                        </vizData:measures>
+                                    </vizData:FlattenedDataset>
+                                </viz:dataset>
+                                <viz:feeds>
+                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Erzeugung"/>
+                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Community-Nutzung"/>
+                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Prognose"/>
+                                    <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Überschuss"/>
+                                    <vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Zeit"/>
+                                </viz:feeds>
+                            </viz:VizFrame>
+                        </VBox>
+                    </VBox>
                 </VBox>
             </VBox>
-        </VBox>
-    </HBox>
+        </HBox>
+    </VBox>
 
 </mvc:View>
