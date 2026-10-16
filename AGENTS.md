@@ -2,6 +2,13 @@
 
 SAP CAP / Fiori / BTP project. Read `AI-AGENT-GUIDE.md` (also loaded via `opencode.json` → `instructions`) for skills, MCP servers, doc lookup and conventions.
 
+## Techstack
+Techstack to be used:
+
+-Sap btp
+-Sap cap
+-Sap fiori elements
+
 ## Project inputs
 
 - `5Energy Sharing im Stadtteil.pdf` — requirements / concept (German). Source of truth for the domain.
