@@ -132,7 +132,7 @@ sap.ui.define(
             },
 
             onRegisterPlant: function () {
-                window.location.href = "/neo.energy.producerportal/index.html";
+                window.location.href = "/neo.energy.energysharingportal/register/index.html";
             },
 
             onAssignPlant: function () {

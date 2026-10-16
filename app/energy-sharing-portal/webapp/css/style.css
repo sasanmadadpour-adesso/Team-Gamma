@@ -1,17 +1,171 @@
+.appShell {
+    min-height: 100vh;
+    background: #f5f6f7;
+    align-items: stretch;
+}
+
+.appSidebar {
+    width: 14rem;
+    background: #ffffff;
+    border-right: 1px solid #d9e0e5;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.appBrand {
+    color: #1d2d3e;
+    font-weight: 700;
+    letter-spacing: 0.04rem;
+    margin-bottom: 1.5rem;
+}
+
+.appSectionLabel {
+    color: #6a6d70;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08rem;
+    margin: 1rem 0 0.5rem 0;
+}
+
+.appSectionLabelTop {
+    margin-top: 2rem;
+}
+
+.appNavButton {
+    justify-content: flex-start;
+    text-align: left;
+    height: 2rem;
+    margin-bottom: 0.125rem;
+    color: #32363a;
+}
+
+.appNavButtonSelected {
+    background: #e6f4f3;
+    color: #007a78;
+    font-weight: 600;
+    border-left: 3px solid #007a78;
+    border-radius: 0;
+}
+
+.appSystemRow {
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.375rem 0;
+}
+
+.appSystemName {
+    flex: 1 1 auto;
+    color: #32363a;
+}
+
+.appStatusDot {
+    color: #107e3e;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+.appSidebarFooter {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+.appFooterTitle {
+    color: #1d2d3e;
+    font-weight: 600;
+}
+
+.appFooterText {
+    color: #6a6d70;
+    font-size: 0.8125rem;
+}
+
+.appMain {
+    flex: 1 1 auto;
+    padding: 1.5rem 2rem;
+    background: #f5f6f7;
+}
+
+.appContent {
+    max-width: 1200px;
+    width: 100%;
+}
+
+.appEyebrow {
+    color: #6a6d70;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+}
+
+.appPageHeader {
+    margin-bottom: 1.5rem;
+}
+
+.appHeaderMeta {
+    margin: 0.25rem 0 0.5rem 0;
+}
+
+.appHeaderLocation {
+    margin-right: 0.75rem;
+}
+
+.appSubtitle {
+    color: #5a6874;
+    margin-top: 0.25rem;
+}
+
+.appMuted {
+    color: #5a6874;
+}
+
+.appSection {
+    margin-bottom: 2rem;
+}
+
+.appSectionHeading {
+    color: #1d2d3e;
+    margin: 0.25rem 0 1rem 0;
+}
+
+.appSectionSubtitle {
+    color: #5a6874;
+    margin: 0 0 0.75rem 0;
+}
+
 .dashboardKpiRow {
     gap: 1rem;
 }
 
 .dashboardKpiTile {
-    min-width: 14rem;
-    flex: 1 1 16rem;
+    min-width: 13rem;
+    flex: 1 1 15rem;
     padding: 1rem;
-    margin: 0.5rem;
-    border: 1px solid #e5e5e5;
-    border-radius: 0.5rem;
+    margin: 0.25rem;
+    border: 1px solid #d9e0e5;
+    border-radius: 0.25rem;
     background: #ffffff;
 }
 
-.actionBar .sapMButton {
-    margin-right: 0.5rem;
+.dashboardKpiTile .sapMObjectNumberText,
+.dashboardKpiTile .sapMObjectNumberUnit {
+    color: #1d2d3e;
+}
+
+.appManagementRow a,
+.appManagementRow .sapMLnk {
+    color: #007a78;
+}
+
+.appStatusDot {
+    color: #107e3e;
+}
+
+.appChartPanel {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #d9e0e5;
+    border-radius: 0.25rem;
 }
