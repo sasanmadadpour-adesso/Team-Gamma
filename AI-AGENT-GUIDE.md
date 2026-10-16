@@ -14,7 +14,7 @@ runtime:         <nodejs | java>            # ESM for Node.js unless legacy CJS
 services:        [<ServiceName> → /service/<ServiceName> (odata-v4)]
 core-entities:   [<Entity → key associations>]
 ui-apps:         [<app/<name> — floorplan>]
-inputs:          ["5Energy Sharing im Stadtteil.pdf" (requirements, DE), Dataset_English.xlsx, Datensatz_Deutsch.xlsx]
+inputs:          ["docs/sources/5Energy Sharing im Stadtteil.pdf" (requirements, DE), docs/sources/Dataset_English.xlsx, docs/sources/Datensatz_Deutsch.xlsx]
 external:        [<service — kind — mock strategy>]
 ai-models:       [<purpose — package — model>]   # only if sap-ai-sdk is used
 stages:          [DEV, TEST, PROD]

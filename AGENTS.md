@@ -11,8 +11,8 @@ Techstack to be used:
 
 ## Project inputs
 
-- `5Energy Sharing im Stadtteil.pdf` — requirements / concept (German). Source of truth for the domain.
-- `Dataset_English.xlsx`, `Datensatz_Deutsch.xlsx` — datasets (EN/DE variants). Extract structure from them; do not invent columns or rules. Ask if the variants differ.
+- `docs/sources/5Energy Sharing im Stadtteil.pdf` — requirements / concept (German). Source of truth for the domain.
+- `docs/sources/Dataset_English.xlsx`, `docs/sources/Datensatz_Deutsch.xlsx` — datasets (EN/DE variants). Extract structure from them; do not invent columns or rules. Ask if the variants differ.
 - Greenfield: no CAP project yet. Follow `AI-AGENT-GUIDE.md` §2.4.
 
 ## Skills

@@ -4,7 +4,7 @@ Stand: 16. Oktober 2026
 
 Diese Beschreibung legt Ziele, Nicht-Ziele und Anforderungen der Community-Verwaltung fest. Sie ist die fachliche Vorgabe für die Umsetzung mit SAP Cloud Application Programming Model (CAP) und SAP Fiori Elements. Sie enthält kein CDS-Datenmodell und keinen Anwendungscode.
 
-Quellen sind das Konzept [5Energy Sharing im Stadtteil.pdf](5Energy%20Sharing%20im%20Stadtteil.pdf) vom 15.10.2026, im Folgenden **Konzept**, die Datensätze [Dataset_English.xlsx](Dataset_English.xlsx) und [Datensatz_Deutsch.xlsx](Datensatz_Deutsch.xlsx), im Folgenden **Datensatz**, und die Entscheidungen des Teams, im Folgenden **Entscheidung des Teams**. Das Konzept beschreibt Rollen, Prozess und Schnittstellen. Der Datensatz liefert Stammdaten, Messwerte, Preise und Rechenregeln für die Demo. Entscheidungen des Teams gehen Konzept und Datensatz vor. Wo sich die Quellen sonst widersprechen, gilt bis zur Klärung eine Arbeitsannahme; der Widerspruch steht unter [Offene Punkte und Lücken](#offene-punkte-und-lücken).
+Quellen sind das Konzept [5Energy Sharing im Stadtteil.pdf](../docs/sources/5Energy%20Sharing%20im%20Stadtteil.pdf) vom 15.10.2026, im Folgenden **Konzept**, die Datensätze [Dataset_English.xlsx](../docs/sources/Dataset_English.xlsx) und [Datensatz_Deutsch.xlsx](../docs/sources/Datensatz_Deutsch.xlsx), im Folgenden **Datensatz**, und die Entscheidungen des Teams, im Folgenden **Entscheidung des Teams**. Das Konzept beschreibt Rollen, Prozess und Schnittstellen. Der Datensatz liefert Stammdaten, Messwerte, Preise und Rechenregeln für die Demo. Entscheidungen des Teams gehen Konzept und Datensatz vor. Wo sich die Quellen sonst widersprechen, gilt bis zur Klärung eine Arbeitsannahme; der Widerspruch steht unter [Offene Punkte und Lücken](#offene-punkte-und-lücken).
 
 Konventionen:
 
@@ -464,8 +464,8 @@ Der Vergleich dient der Einordnung. Übernommen ist nur, was die Community-Verwa
 
 ### Projektquellen
 
-- [5Energy Sharing im Stadtteil.pdf](5Energy%20Sharing%20im%20Stadtteil.pdf), sechs Seiten, Stand 15.10.2026. Seite 1: Rollenmodell. Seite 2: Gesamtprozess mit Lumenaza und BKV, Schnittstellen S1 bis S6 und B1, B2. Seiten 3 bis 6: Aktionen 1 bis 4.
-- [Dataset_English.xlsx](Dataset_English.xlsx) und [Datensatz_Deutsch.xlsx](Datensatz_Deutsch.xlsx), je sieben Blätter, inhaltlich gleich.
+- [5Energy Sharing im Stadtteil.pdf](../docs/sources/5Energy%20Sharing%20im%20Stadtteil.pdf), sechs Seiten, Stand 15.10.2026. Seite 1: Rollenmodell. Seite 2: Gesamtprozess mit Lumenaza und BKV, Schnittstellen S1 bis S6 und B1, B2. Seiten 3 bis 6: Aktionen 1 bis 4.
+- [Dataset_English.xlsx](../docs/sources/Dataset_English.xlsx) und [Datensatz_Deutsch.xlsx](../docs/sources/Datensatz_Deutsch.xlsx), je sieben Blätter, inhaltlich gleich.
 
 ### Weiterführende Recherche
 
