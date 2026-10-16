@@ -1,5 +1,23 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "instructions": ["AI-AGENT-GUIDE.md"],
+  "mcp": {
+    "cds-mcp": {
+      "type": "local",
+      "command": ["npx", "-y", "@cap-js/mcp-server"],
+      "enabled": true
+    },
+    "ui5": {
+      "type": "local",
+      "command": ["npx", "-y", "@ui5/mcp-server"],
+      "enabled": true
+    },
+    "fiori-mcp": {
+      "type": "local",
+      "command": ["npx", "--yes", "@sap-ux/fiori-mcp-server@1.15.12", "fiori-mcp"],
+      "enabled": true
+    }
+  },
   "provider": {
     "adesso-ai-hub": {
       "npm": "@ai-sdk/openai-compatible",
