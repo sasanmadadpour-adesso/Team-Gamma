@@ -1,0 +1,16 @@
+{
+  "scopes": [
+    { "name": "$XSAPPNAME.Producer", "description": "Anlagenbetreiber" },
+    { "name": "$XSAPPNAME.Supplier", "description": "Lieferant" },
+    { "name": "$XSAPPNAME.Participant", "description": "Teilnehmer" },
+    { "name": "$XSAPPNAME.IntegrationClient", "description": "Integrationsclient" }
+  ],
+  "attributes": [],
+  "role-templates": [
+    { "name": "Producer", "description": "Anlagenbetreiber", "scope-references": ["$XSAPPNAME.Producer"] },
+    { "name": "Supplier", "description": "Lieferant", "scope-references": ["$XSAPPNAME.Supplier"] },
+    { "name": "Participant", "description": "Teilnehmer", "scope-references": ["$XSAPPNAME.Participant"] },
+    { "name": "IntegrationClient", "description": "Integrationsclient", "scope-references": ["$XSAPPNAME.IntegrationClient"] }
+  ],
+  "authorities-inheritance": false
+}

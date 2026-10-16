@@ -1,0 +1,28 @@
+{
+  "generationParameters": {
+    "generationDate": "Fri Oct 16 2026 12:20:16 GMT+0200 (Mitteleuropäische Sommerzeit)",
+    "generatorPlatform": "CLI",
+    "serviceType": "Local CAP",
+    "metadataFilename": "",
+    "serviceUrl": "http://localhost:4004/service/ParticipantOnboardingService",
+    "appName": "participant-onboarding",
+    "appTitle": "Energy Sharing · Teilnehmer-Onboarding",
+    "appDescription": "Mehrstufiges Teilnehmer-Onboarding",
+    "appNamespace": "neo.energy",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.148.12",
+    "enableEslint": true,
+    "enableTypeScript": false,
+    "showMockDataInfo": false,
+    "generatorVersion": "1.33.0",
+    "template": "Custom Page V4",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [
+      {
+        "type": "Main Entity",
+        "value": "ParticipationApplications"
+      }
+    ],
+    "launchText": "To launch the generated app, start your CAP project:  and navigate to the following location in your browser:\n\nhttp://localhost:4004/participant-onboarding/webapp/index.html"
+  }
+}

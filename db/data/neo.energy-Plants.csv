@@ -1,0 +1,2 @@
+ID;operatorName;email;productionType;capacityKw;azimuth;address;buildingId;marketLocationId;meteringLocationId;meterNumber;meteringSystem;balancingArea;bkId;imsysActive;status;desiredStart
+bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb;Jan Koller;jankoller@gmail.com;Solar;6.00;180.00;Vilbelerlandstr. 21, 60388 Frankfurt am Main;B-FRA-01;DE0073325707820000000000000088943;DE0001815707800000101300000131964;;iMS/TF;B-FRA-01;BK-B-FRA-01;true;READY_FOR_ASSIGNMENT;2026-10-01

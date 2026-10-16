@@ -1,0 +1,38 @@
+{
+  "name": "Team-Gamma",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@cap-js/hana": "^3",
+    "@sap/cds": "^10",
+    "@sap/xssec": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^10",
+    "cds-plugin-ui5": "^0.17.0"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "test": "node --test test/**/*.test.js",
+    "build": "cds build --production",
+    "compile": "cds compile srv -s all --to edmx",
+    "watch-producer-portal": "cds watch --open neo.energy.producerportal/index.html?sap-ui-xx-viewCache=false --livereload false"
+  },
+  "private": true,
+  "cds": {
+    "requires": {
+      "[production]": {
+        "auth": "xsuaa"
+      }
+    }
+  },
+  "workspaces": [
+    "app/*"
+  ],
+  "sapux": [
+    "app/community-management",
+    "app/producer-portal",
+    "app/participant-onboarding"
+  ]
+}

@@ -1,0 +1,4 @@
+ID;plant_ID;code;label;status;reason
+33333333-3333-3333-3333-333333333331;bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb;IMSYS;Aktives iMSys;POSITIVE;
+33333333-3333-3333-3333-333333333332;bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb;GRID;Bilanzierungsgebiet;POSITIVE;
+33333333-3333-3333-3333-333333333333;bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb;BALANCING_GROUP;Bilanzkreis;POSITIVE;

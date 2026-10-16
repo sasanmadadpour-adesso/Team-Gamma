@@ -1,0 +1,28 @@
+{
+  "generationParameters": {
+    "generationDate": "Fri Oct 16 2026 12:20:17 GMT+0200 (Mitteleuropäische Sommerzeit)",
+    "generatorPlatform": "CLI",
+    "serviceType": "Local CAP",
+    "metadataFilename": "",
+    "serviceUrl": "http://localhost:4004/service/CommunityManagementService",
+    "appName": "community-management",
+    "appTitle": "Energy Sharing · Community-Verwaltung",
+    "appDescription": "Community-Verwaltung für Energy Sharing",
+    "appNamespace": "neo.energy",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.148.12",
+    "enableEslint": true,
+    "enableTypeScript": false,
+    "showMockDataInfo": false,
+    "generatorVersion": "1.33.0",
+    "template": "List Report Page V4",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [
+      {
+        "type": "Main Entity",
+        "value": "Communities"
+      }
+    ],
+    "launchText": "To launch the generated app, start your CAP project:  and navigate to the following location in your browser:\n\nhttp://localhost:4004/community-management/webapp/index.html"
+  }
+}

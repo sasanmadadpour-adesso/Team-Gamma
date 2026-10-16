@@ -1,0 +1,1 @@
+using CommunityManagementService as service from '../../srv/community-management-service';

@@ -1,0 +1,2 @@
+ID;firstName;lastName;email;customerType;buildingId;marketLocationId;meteringLocationId;meterNumber;meteringSystem;imsysActive;mk7Participation;balancingArea;contractConfirmed;consentConfirmed;status;validFrom;community_ID
+cccccccc-cccc-cccc-cccc-cccccccccccc;Mira;Beispiel;mira@example.com;HOUSEHOLD;B-FRA-01;50539603888;DE0001815707800000101300000135009;;iMS/TF;true;true;B-FRA-01;true;true;ACTIVE;2026-10-01;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa

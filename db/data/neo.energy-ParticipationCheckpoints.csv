@@ -1,0 +1,4 @@
+ID;participant_ID;code;label;status;reason
+dddddddd-dddd-dddd-dddd-ddddddddddd1;cccccccc-cccc-cccc-cccc-cccccccccccc;IMSYS;Aktives iMSys;POSITIVE;
+dddddddd-dddd-dddd-dddd-ddddddddddd2;cccccccc-cccc-cccc-cccc-cccccccccccc;CONTRACT;Vertrag;POSITIVE;
+dddddddd-dddd-dddd-dddd-ddddddddddd3;cccccccc-cccc-cccc-cccc-cccccccccccc;CONSENT;Zustimmung;POSITIVE;
