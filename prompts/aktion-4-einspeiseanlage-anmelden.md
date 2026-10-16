@@ -118,7 +118,7 @@ Existing upstream information may include:
 
 \- Konditionen
 
-\- AufteilungsschlÃ¼ssel
+\- Aufteilungsschlüssel
 
 \- Entgelt
 
@@ -204,11 +204,11 @@ and normal grid usage remains applicable.
 
 
 
-Do NOT confuse "Ãœberschuss" and "Reststrom".
+Do NOT confuse "Überschuss" and "Reststrom".
 
 
 
-## Ãœberschuss
+## Überschuss
 
 
 
@@ -226,7 +226,7 @@ Community-Nutzung = 31.6 kWh
 
 
 
-Ãœberschuss = 11.2 kWh
+Überschuss = 11.2 kWh
 
 
 
@@ -306,7 +306,7 @@ The broader process contains:
 
 \- Ansprechpartner
 
-\- SchlÃ¼ssel-Typ
+\- Schlüssel-Typ
 
 \- Entgelt
 
@@ -548,7 +548,7 @@ Display one concise note such as:
 
 
 
-"Demodaten fÃ¼r MVP"
+"Demodaten für MVP"
 
 
 
@@ -736,7 +736,7 @@ Allow editing before submission.
 
 
 
-# 14. Anlage prÃ¼fen
+# 14. Anlage prüfen
 
 
 
@@ -764,11 +764,11 @@ Example:
 
 
 
-âœ“ Erneuerbare-Energien-Anlage
+✓ Erneuerbare-Energien-Anlage
 
-âœ“ Gebiet zulÃ¤ssig
+✓ Gebiet zulässig
 
-âœ“ iMSys vorhanden
+✓ iMSys vorhanden
 
 
 
@@ -782,19 +782,19 @@ Their intended data provenance is:
 
 EE-Anlage
 
-â†’ producer / plant master data, e.g. production type
+→ producer / plant master data, e.g. production type
 
 
 
 Gebiet
 
-â†’ Community context + S/4 Netz-/Bilanzierungsgebiet
+→ Community context + S/4 Netz-/Bilanzierungsgebiet
 
 
 
 iMSys
 
-â†’ S/4 / metering context
+→ S/4 / metering context
 
 
 
@@ -820,7 +820,7 @@ Reflect the supplied process rules:
 
 \- operation must not be predominantly commercial according to the supplied
 
-&#x20; Â§42c EnWG process context
+&#x20; §42c EnWG process context
 
 \- Einspeisung is fully balanced
 
@@ -850,7 +850,7 @@ Direction:
 
 
 
-S/4HANA Utilities â†’ BTP
+S/4HANA Utilities → BTP
 
 
 
@@ -886,7 +886,7 @@ Do NOT implement fake S/4HANA internals.
 
 
 
-# 17. Step 4.2 - Ãœbernahme bestÃ¤tigen
+# 17. Step 4.2 - Übernahme bestätigen
 
 
 
@@ -896,7 +896,7 @@ Lieferant step:
 
 
 
-"Ãœbernahme bestÃ¤tigen"
+"Übernahme bestätigen"
 
 
 
@@ -918,7 +918,7 @@ Do not silently skip it.
 
 
 
-# 18. S2 - MaKo-Prozess auslÃ¶sen
+# 18. S2 - MaKo-Prozess auslösen
 
 
 
@@ -930,7 +930,7 @@ Direction:
 
 
 
-BTP â†’ S/4HANA Utilities
+BTP → S/4HANA Utilities
 
 
 
@@ -970,7 +970,7 @@ The MVP may provide explicit prototype controls such as:
 
 
 
-\- "BestÃ¤tigung erhalten"
+\- "Bestätigung erhalten"
 
 \- "Ablehnung erhalten"
 
@@ -1006,7 +1006,7 @@ Direction:
 
 
 
-S/4HANA Utilities â†’ BTP
+S/4HANA Utilities → BTP
 
 
 
@@ -1174,11 +1174,11 @@ The application should expose a clean conceptual handoff:
 
 Aktion 4
 
-â†’ Anlage angemeldet
+→ Anlage angemeldet
 
-â†’ Bereit zur Zuordnung
+→ Bereit zur Zuordnung
 
-â†’ Aktion 2
+→ Aktion 2
 
 
 
@@ -1254,7 +1254,7 @@ Direction:
 
 
 
-S/4HANA Utilities â†’ BTP
+S/4HANA Utilities → BTP
 
 
 
@@ -1262,7 +1262,7 @@ Relevant values include:
 
 
 
-\- Â¼-h measurement values
+\- ¼-h measurement values
 
 \- profile values
 
@@ -1298,7 +1298,7 @@ derived from this source for:
 
 \- Community-Nutzung
 
-\- Ãœberschuss
+\- Überschuss
 
 
 
@@ -1330,7 +1330,7 @@ Conceptually:
 
 
 
-Lumenaza â†’ S/4HANA
+Lumenaza → S/4HANA
 
 
 
@@ -1462,7 +1462,7 @@ Axes:
 
 X:
 
-00:00 â†’ 24:00
+00:00 → 24:00
 
 
 
@@ -1484,7 +1484,7 @@ Clearly mark the current values as:
 
 
 
-"Demodaten fÃ¼r MVP"
+"Demodaten für MVP"
 
 
 
@@ -1518,7 +1518,7 @@ Community-Nutzung
 
 
 
-Ãœberschuss
+Überschuss
 
 11.2 kWh
 
@@ -1572,17 +1572,17 @@ Represent the high-level business logic clearly:
 
 Erzeugung
 
-â†“
+↓
 
 Community-Nutzung
 
-â†“
+↓
 
-Ãœberschuss?
+Überschuss?
 
-â”œâ”€â”€ Nein â†’ vollstÃ¤ndig innerhalb der Community genutzt
+├── Nein → vollständig innerhalb der Community genutzt
 
-â””â”€â”€ Ja   â†’ Direktvermarktung / downstream market process
+└── Ja   → Direktvermarktung / downstream market process
 
 
 
@@ -1602,7 +1602,7 @@ visible to the Anlagenbetreiber.
 
 
 
-The "Ãœberschuss â†’ Direktvermarktung" representation is an operator-facing
+The "Überschuss → Direktvermarktung" representation is an operator-facing
 
 visualization of a downstream business result.
 
@@ -1616,7 +1616,7 @@ According to the target architecture, responsibilities such as:
 
 \- Fahrplan
 
-\- trading of Rest- und Ãœberschussmengen
+\- trading of Rest- und Überschussmengen
 
 \- MaBiS
 
@@ -1642,9 +1642,9 @@ For the MVP:
 
 
 
-Ãœberschuss
+Überschuss
 
-â†’ Direktvermarktung
+→ Direktvermarktung
 
 
 
@@ -1670,15 +1670,15 @@ Example:
 
 
 
-Community-VergÃ¼tung
+Community-Vergütung
 
-0.14 â‚¬/kWh
+0.14 €/kWh
 
 
 
 Direktvermarktung
 
-0.08 â‚¬/kWh
+0.08 €/kWh
 
 
 
@@ -1686,7 +1686,7 @@ Meaning:
 
 
 
-Community-VergÃ¼tung
+Community-Vergütung
 
 = simplified price/value attributed to electricity used within the
 
@@ -1736,23 +1736,23 @@ Example:
 
 Community-Nutzung:
 
-31.6 kWh Ã— 0.14 â‚¬/kWh
+31.6 kWh × 0.14 €/kWh
 
-= 4.42 â‚¬
+= 4.42 €
 
 
 
 Direktvermarktung:
 
-11.2 kWh Ã— 0.08 â‚¬/kWh
+11.2 kWh × 0.08 €/kWh
 
-= 0.90 â‚¬
+= 0.90 €
 
 
 
-ErlÃ¶s heute:
+Erlös heute:
 
-5.32 â‚¬
+5.32 €
 
 
 
@@ -1772,7 +1772,7 @@ integrated commercial data.
 
 
 
-"ErlÃ¶s heute" is a simplified MVP visualization.
+"Erlös heute" is a simplified MVP visualization.
 
 
 
@@ -1834,7 +1834,7 @@ Use the otherwise-empty area below the graph for a compact section such as:
 
 
 
-"Verteilung \& ErlÃ¶s heute"
+"Verteilung \& Erlös heute"
 
 
 
@@ -1854,7 +1854,7 @@ Community-Nutzung
 
 
 
-Ãœberschuss
+Überschuss
 
 11.2 kWh
 
@@ -1866,33 +1866,33 @@ Nutzungsquote
 
 
 
-Community-VergÃ¼tung
+Community-Vergütung
 
-0.14 â‚¬/kWh
+0.14 €/kWh
 
 
 
 Direktvermarktung
 
-0.08 â‚¬/kWh
+0.08 €/kWh
 
 
 
-Community-ErlÃ¶s
+Community-Erlös
 
-4.42 â‚¬
-
-
-
-Direktvermarktungs-ErlÃ¶s
-
-0.90 â‚¬
+4.42 €
 
 
 
-ErlÃ¶s heute
+Direktvermarktungs-Erlös
 
-5.32 â‚¬
+0.90 €
+
+
+
+Erlös heute
+
+5.32 €
 
 
 
@@ -1900,7 +1900,7 @@ Optionally show a small state indicator:
 
 
 
-"Ãœberschussvermarktung: Aktiv"
+"Überschussvermarktung: Aktiv"
 
 
 
@@ -2000,15 +2000,15 @@ Westnetz GmbH
 
 
 
-Community-VergÃ¼tung:
+Community-Vergütung:
 
-0.14 â‚¬/kWh
+0.14 €/kWh
 
 
 
 Direktvermarktung:
 
-0.08 â‚¬/kWh
+0.08 €/kWh
 
 
 
@@ -2218,7 +2218,7 @@ Do NOT implement fake internals for:
 
 \- MSB
 
-\- ÃœNB
+\- ÜNB
 
 \- BIKO
 
@@ -2322,25 +2322,25 @@ Differentiate:
 
 Validation errors
 
-â†’ incorrect/missing user input
+→ incorrect/missing user input
 
 
 
 Business rejection
 
-â†’ eligibility or market-process rejection
+→ eligibility or market-process rejection
 
 
 
 Integration error
 
-â†’ external system unavailable / failed request
+→ external system unavailable / failed request
 
 
 
 Persistence error
 
-â†’ state could not be stored
+→ state could not be stored
 
 
 
@@ -2504,7 +2504,7 @@ The implementation is complete when:
 
 
 
-28\. Reststrom and Ãœberschuss are not confused.
+28\. Reststrom and Überschuss are not confused.
 
 
 
@@ -2542,33 +2542,33 @@ The implementation is complete when:
 
 Existing Energy-Sharing context
 
-&#x20;       â†“
+&#x20;       ↓
 
 Community Sonnenviertel
 
-&#x20;       â†“
+&#x20;       ↓
 
 Community / participant / grid / Bilanzkreis / metering context
 
-&#x20;       â†“
+&#x20;       ↓
 
 Meine Einspeiseanlage
 
-&#x20;       â†“
+&#x20;       ↓
 
 4.1 Anlage anmelden
 
-&#x20;       â†“
+&#x20;       ↓
 
 Einspeise-MaLo + Leistung + EE-Art
 
-&#x20;       â†“
+&#x20;       ↓
 
 S1 / master-data context
 
-&#x20;       â†“
+&#x20;       ↓
 
-PrÃ¼fung:
+Prüfung:
 
 EE-Anlage
 
@@ -2576,45 +2576,45 @@ Gebiet
 
 iMSys
 
-&#x20;       â†“
+&#x20;       ↓
 
-4.2 Ãœbernahme bestÃ¤tigen
+4.2 Übernahme bestätigen
 
-&#x20;       â†“
+&#x20;       ↓
 
 S2 boundary
 
-&#x20;       â†“
+&#x20;       ↓
 
 S/4 / market process outside frontend
 
-&#x20;       â†“
+&#x20;       ↓
 
 S3 confirmation or rejection
 
-&#x20;       â†“
+&#x20;       ↓
 
 4.3 Antwort verarbeiten
 
-&#x20;       â†“
+&#x20;       ↓
 
 if confirmed:
 
 persist plant
 
-&#x20;       â†“
+&#x20;       ↓
 
 4.4 Anlage ist angemeldet
 
-&#x20;       â†“
+&#x20;       ↓
 
 Bereit zur Zuordnung
 
-&#x20;       â†“
+&#x20;       ↓
 
 future Aktion 2
 
-&#x20;       â†“
+&#x20;       ↓
 
 Teil der Community
 
@@ -2628,35 +2628,35 @@ Operational visualization:
 
 15-minute measurement/profile context
 
-&#x20;       â†“
+&#x20;       ↓
 
 S5 boundary
 
-&#x20;       â†“
+&#x20;       ↓
 
 Erzeugung
 
-&#x20;       â†“
+&#x20;       ↓
 
 Community-Verbrauch / allocation context
 
-&#x20;       â†“
+&#x20;       ↓
 
 Community-Nutzung
 
-&#x20;       â†“
+&#x20;       ↓
 
-Ãœberschuss
+Überschuss
 
-&#x20;       â†“
+&#x20;       ↓
 
 if surplus > 0
 
-&#x20;       â†“
+&#x20;       ↓
 
 downstream Direktvermarktung
 
-&#x20;       â†“
+&#x20;       ↓
 
 Lumenaza / BKV / trading outside frontend
 
@@ -2670,11 +2670,11 @@ Commercial MVP visualization:
 
 Community-Nutzung
 
-Ã— Community-VergÃ¼tung
+× Community-Vergütung
 
-&#x20;       â†“
+&#x20;       ↓
 
-Community-ErlÃ¶s
+Community-Erlös
 
 
 
@@ -2682,19 +2682,19 @@ Community-ErlÃ¶s
 
 
 
-Ãœberschuss
+Überschuss
 
-Ã— Direktvermarktungswert
+× Direktvermarktungswert
 
-&#x20;       â†“
+&#x20;       ↓
 
-Direktvermarktungs-ErlÃ¶s
+Direktvermarktungs-Erlös
 
 
 
-&#x20;       â†“
+&#x20;       ↓
 
-ErlÃ¶s heute (MVP)
+Erlös heute (MVP)
 
 
 
